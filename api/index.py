@@ -9,6 +9,7 @@ from typing import Dict, Any, Optional, List
 import pandas as pd
 from pydantic import BaseModel
 from fastapi import FastAPI, HTTPException
+from fastapi.responses import HTMLResponse
 from fastapi.middleware.cors import CORSMiddleware
 
 # Ensure simulation root is in path
@@ -30,6 +31,20 @@ app.add_middleware(
 )
 
 engine = DecisionEngine()
+
+
+@app.get("/", response_class=HTMLResponse)
+@app.get("/api", response_class=HTMLResponse)
+def root_index():
+    for candidate in [
+        os.path.join(os.path.dirname(__file__), "..", "index.html"),
+        os.path.join(os.path.dirname(__file__), "..", "public", "index.html"),
+        os.path.join(os.path.dirname(__file__), "index.html")
+    ]:
+        if os.path.exists(candidate):
+            with open(candidate, "r", encoding="utf-8") as f:
+                return f.read()
+    return "<h1>Risk-Adaptive Zero Trust Framework API is Live</h1>"
 
 
 class EvaluatePayload(BaseModel):
