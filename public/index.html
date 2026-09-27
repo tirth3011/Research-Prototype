@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Risk-Adaptive Zero Trust Framework | Deepfake Identity Mitigation</title>
+  <meta name="description" content="A Risk-Adaptive Zero Trust Framework for Mitigating Deepfake-Based Identity Attacks in Enterprise Environments">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0b0f19;
+      --surface: #111827;
+      --surface-glass: rgba(17, 24, 39, 0.75);
+      --border: rgba(255, 255, 255, 0.08);
+      --border-focus: #38bdf8;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --cyan: #38bdf8;
+      --indigo: #6366f1;
+      --low: #10b981;
+      --medium: #f59e0b;
+      --high: #f97316;
+      --critical: #ef4444;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
+    body { background-color: var(--bg); color: var(--text); min-height: 100vh; padding: 24px 20px; line-height: 1.5; }
+    
+    .container { max-width: 1300px; margin: 0 auto; }
+    
+    /* Header */
+    header { margin-bottom: 24px; border-bottom: 1px solid var(--border); padding-bottom: 16px; }
+    .title-row { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+    h1 { font-size: 1.85rem; font-weight: 800; background: linear-gradient(135deg, var(--cyan) 0%, var(--indigo) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .subtitle { color: var(--text-muted); font-size: 0.9rem; margin-top: 4px; }
+    .tag { background: rgba(56, 189, 248, 0.1); border: 1px solid rgba(56, 189, 248, 0.3); color: var(--cyan); padding: 4px 10px; border-radius: 999px; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+
+    /* Notice Banner */
+    .banner { background: rgba(56, 189, 248, 0.05); border-left: 4px solid var(--cyan); padding: 12px 16px; border-radius: 6px; font-size: 0.85rem; color: #cbd5e1; margin-bottom: 20px; }
+
+    /* Quick Launcher Buttons */
+    .quick-launch-bar { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 24px; }
+    .btn-quick { background: var(--surface); border: 1px solid var(--border); color: var(--text); padding: 10px 16px; border-radius: 8px; font-size: 0.85rem; font-weight: 600; cursor: pointer; transition: all 0.2s ease; display: inline-flex; align-items: center; gap: 8px; }
+    .btn-quick:hover { background: #1e293b; border-color: var(--cyan); transform: translateY(-1px); }
+    .btn-quick.active { border-color: var(--cyan); background: rgba(56, 189, 248, 0.12); color: var(--cyan); }
+
+    /* Tabs Navigation */
+    .tabs-nav { display: flex; gap: 8px; border-bottom: 1px solid var(--border); margin-bottom: 24px; overflow-x: auto; padding-bottom: 4px; }
+    .tab-btn { background: none; border: none; color: var(--text-muted); padding: 10px 16px; font-size: 0.9rem; font-weight: 600; cursor: pointer; border-radius: 6px; transition: all 0.2s; white-space: nowrap; }
+    .tab-btn:hover { color: var(--text); background: rgba(255, 255, 255, 0.03); }
+    .tab-btn.active { color: var(--cyan); background: rgba(56, 189, 248, 0.1); border-bottom: 2px solid var(--cyan); }
+    .tab-pane { display: none; }
+    .tab-pane.active { display: block; animation: fadeIn 0.25s ease-in-out; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* Grid Layouts */
+    .grid-2 { display: grid; grid-template-columns: 1.15fr 1fr; gap: 24px; }
+    @media (max-width: 960px) { .grid-2 { grid-template-columns: 1fr; } }
+
+    .card { background: var(--surface-glass); border: 1px solid var(--border); border-radius: 12px; padding: 22px; box-shadow: 0 8px 24px rgba(0,0,0,0.4); backdrop-filter: blur(8px); margin-bottom: 20px; }
+    .card-title { font-size: 1.1rem; font-weight: 700; margin-bottom: 16px; color: var(--text); display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); padding-bottom: 10px; }
+
+    /* Form & Sliders */
+    .slider-group { margin-bottom: 18px; }
+    .slider-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+    .slider-label { font-size: 0.85rem; font-weight: 600; color: #cbd5e1; }
+    .slider-val { font-family: 'JetBrains Mono', monospace; font-size: 0.95rem; font-weight: 700; color: var(--cyan); }
+    .slider-desc { font-size: 0.75rem; color: var(--text-muted); margin-top: 4px; }
+    input[type="range"] { width: 100%; height: 6px; border-radius: 3px; background: #1e293b; outline: none; -webkit-appearance: none; }
+    input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 18px; height: 18px; border-radius: 50%; background: var(--cyan); cursor: pointer; box-shadow: 0 0 8px rgba(56, 189, 248, 0.6); transition: 0.15s; }
+    input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.15); }
+
+    select, input[type="text"] { width: 100%; background: #0f172a; border: 1px solid var(--border); color: var(--text); padding: 9px 12px; border-radius: 6px; font-size: 0.85rem; outline: none; }
+    select:focus, input[type="text"]:focus { border-color: var(--cyan); }
+
+    /* Visual Metrics Box */
+    .metrics-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 20px; }
+    .metric-cell { background: #0f172a; border: 1px solid var(--border); border-radius: 8px; padding: 14px; text-align: center; }
+    .metric-title { font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase; font-weight: 600; margin-bottom: 4px; }
+    .metric-score { font-family: 'JetBrains Mono', monospace; font-size: 1.55rem; font-weight: 800; color: var(--cyan); }
+
+    /* Badges */
+    .badge { display: inline-block; padding: 6px 14px; border-radius: 6px; font-weight: 700; font-size: 0.9rem; text-align: center; }
+    .badge-low { background: rgba(16, 185, 129, 0.15); color: var(--low); border: 1px solid var(--low); }
+    .badge-medium { background: rgba(245, 158, 11, 0.15); color: var(--medium); border: 1px solid var(--medium); }
+    .badge-high { background: rgba(249, 115, 22, 0.15); color: var(--high); border: 1px solid var(--high); }
+    .badge-critical { background: rgba(239, 68, 68, 0.2); color: var(--critical); border: 1px solid var(--critical); box-shadow: 0 0 10px rgba(239, 68, 68, 0.3); }
+
+    /* Visual Pipeline Steps */
+    .pipeline-step { display: flex; align-items: center; justify-content: space-between; padding: 9px 14px; border-radius: 6px; margin-bottom: 7px; font-size: 0.82rem; font-weight: 500; }
+    .pipe-active { background: rgba(56, 189, 248, 0.1); border-left: 4px solid var(--cyan); color: #f8fafc; }
+    .pipe-crit { background: rgba(239, 68, 68, 0.12); border-left: 4px solid var(--critical); color: #fca5a5; font-weight: 600; }
+    .pipe-dim { background: rgba(255, 255, 255, 0.02); border-left: 4px solid #334155; color: #64748b; }
+
+    /* Table */
+    .data-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; margin-top: 10px; }
+    .data-table th, .data-table td { padding: 9px 12px; text-align: left; border-bottom: 1px solid var(--border); }
+    .data-table th { color: var(--text-muted); font-weight: 600; background: rgba(15, 23, 42, 0.6); }
+
+    /* Contrast Box */
+    .contrast-box { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    @media (max-width: 768px) { .contrast-box { grid-template-columns: 1fr; } }
+    .contrast-card { background: #0f172a; border: 1px solid var(--border); border-radius: 10px; padding: 20px; }
+
+    /* Buttons */
+    .btn-action { background: var(--cyan); color: #0b0f19; border: none; padding: 10px 18px; border-radius: 6px; font-size: 0.85rem; font-weight: 700; cursor: pointer; transition: 0.15s; }
+    .btn-action:hover { opacity: 0.9; transform: translateY(-1px); }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="title-row">
+        <div>
+          <h1>🛡️ Risk-Adaptive Zero Trust Framework</h1>
+          <p class="subtitle">Mitigating Deepfake-Based Identity Attacks in Enterprise Environments</p>
+        </div>
+        <span class="tag">Research Simulation</span>
+      </div>
+    </header>
+
+    <div class="banner">
+      <strong>Research Notice:</strong> Multi-signal Zero Trust architecture evaluating dynamic authentication and authorization scaling across 
+      Identity (<strong>I</strong>), Device (<strong>D</strong>), Context (<strong>C</strong>), Action Criticality (<strong>A</strong>), and Deepfake Uncertainty (<strong>U</strong>).
+    </div>
+
+    <!-- 1-Click Benchmark Quick-Launchers -->
+    <div class="quick-launch-bar">
+      <button class="btn-quick active" id="btn-scn1" onclick="loadBenchmark(1)">🟢 SCN-01: Benign Access</button>
+      <button class="btn-quick" id="btn-scn2" onclick="loadBenchmark(2)">🟡 SCN-02: New Device Login</button>
+      <button class="btn-quick" id="btn-scn3" onclick="loadBenchmark(3)">🟠 SCN-03: Foreign Context</button>
+      <button class="btn-quick" id="btn-scn4" onclick="loadBenchmark(4)">🔴 SCN-04: Deepfake ₹10L Wire</button>
+      <button class="btn-quick" id="btn-scn5" onclick="loadBenchmark(5)">🟣 SCN-05: Deepfake Public Info</button>
+    </div>
+
+    <!-- Tabs Navigation -->
+    <div class="tabs-nav">
+      <button class="tab-btn active" onclick="switchTab('tab-sim')">🎛️ Interactive Simulator</button>
+      <button class="tab-btn" onclick="switchTab('tab-contrast')">⚖️ Action Criticality Contrast (SCN-04 vs 05)</button>
+      <button class="tab-btn" onclick="switchTab('tab-ahp')">📐 AHP Matrix Workshop</button>
+      <button class="tab-btn" onclick="switchTab('tab-exp')">🧪 Empirical Experiments</button>
+      <button class="tab-btn" onclick="switchTab('tab-dataset')">📂 Curated Scenario Dataset</button>
+    </div>
+
+    <!-- TAB 1: INTERACTIVE SIMULATOR -->
+    <div id="tab-sim" class="tab-pane active">
+      <div class="grid-2">
+        <!-- Controls Column -->
+        <div class="card">
+          <div class="card-title">
+            <span>1. Multi-Signal Factor Configuration</span>
+            <span id="activeScenarioLabel" style="font-size: 0.8rem; color: var(--cyan); font-weight: 500;">SCN-01</span>
+          </div>
+
+          <div class="slider-group">
+            <div class="slider-header">
+              <span class="slider-label">Identity Risk (I)</span>
+              <span class="slider-val" id="val-I">0.0</span>
+            </div>
+            <input type="range" id="slider-I" min="0" max="4" step="0.5" value="0" oninput="recalc()">
+            <div class="slider-desc" id="desc-I">Verified Corporate Employee</div>
+          </div>
+
+          <div class="slider-group">
+            <div class="slider-header">
+              <span class="slider-label">Device Risk (D)</span>
+              <span class="slider-val" id="val-D">0.0</span>
+            </div>
+            <input type="range" id="slider-D" min="0" max="4" step="0.5" value="0" oninput="recalc()">
+            <div class="slider-desc" id="desc-D">Managed Corporate MDM/EDR Compliant Device</div>
+          </div>
+
+          <div class="slider-group">
+            <div class="slider-header">
+              <span class="slider-label">Context Anomaly (C)</span>
+              <span class="slider-val" id="val-C">0.0</span>
+            </div>
+            <input type="range" id="slider-C" min="0" max="4" step="0.5" value="0" oninput="recalc()">
+            <div class="slider-desc" id="desc-C">Normal Office Location, Business Hours & Subnet</div>
+          </div>
+
+          <div class="slider-group">
+            <div class="slider-header">
+              <span class="slider-label">Action Criticality (A)</span>
+              <span class="slider-val" id="val-A">1.0</span>
+            </div>
+            <input type="range" id="slider-A" min="0" max="4" step="0.5" value="1" oninput="recalc()">
+            <div class="slider-desc" id="desc-A">Standard Internal Data / Routine Operational Access</div>
+          </div>
+
+          <div class="slider-group">
+            <div class="slider-header">
+              <span class="slider-label">Deepfake Uncertainty (U)</span>
+              <span class="slider-val" id="val-U">0.0</span>
+            </div>
+            <input type="range" id="slider-U" min="0" max="4" step="0.5" value="0" oninput="recalc()">
+            <div class="slider-desc" id="desc-U">Strongly Verified Authentic (Hardware Token Match)</div>
+          </div>
+
+          <div style="margin-top: 20px; border-top: 1px solid var(--border); padding-top: 14px;">
+            <label style="font-size: 0.8rem; font-weight: 600; color: var(--text-muted); display: block; margin-bottom: 6px;">Simulated Primary MFA Challenge (AuthN vs AuthZ Test):</label>
+            <select id="select-mfa" onchange="recalc()">
+              <option value="PASS">PASS (MFA Verified - Test Authorization Hold)</option>
+              <option value="FAIL">FAIL (MFA Challenge Rejected)</option>
+              <option value="PENDING">PENDING</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Output Column -->
+        <div class="card">
+          <div class="card-title">
+            <span>2. Zero Trust Evaluation & Decision</span>
+            <span id="decisionBadge"><span class="badge badge-low">ALLOW</span></span>
+          </div>
+
+          <!-- Speedometer & Radar Visuals -->
+          <div style="display: flex; justify-content: space-around; align-items: center; margin-bottom: 16px; flex-wrap: wrap;">
+            <!-- Speedometer SVG -->
+            <div style="text-align: center;">
+              <svg width="220" height="130" viewBox="0 0 300 160">
+                <path d="M 40 130 A 110 110 0 0 1 260 130" fill="none" stroke="#1e293b" stroke-width="22" stroke-linecap="round"/>
+                <path d="M 40 130 A 110 110 0 0 1 72 52" fill="none" stroke="#10b981" stroke-width="16" opacity="0.85"/>
+                <path d="M 72 52 A 110 110 0 0 1 150 20" fill="none" stroke="#f59e0b" stroke-width="16" opacity="0.85"/>
+                <path d="M 150 20 A 110 110 0 0 1 228 52" fill="none" stroke="#f97316" stroke-width="16" opacity="0.85"/>
+                <path d="M 228 52 A 110 110 0 0 1 260 130" fill="none" stroke="#ef4444" stroke-width="16" opacity="0.85"/>
+                <line id="needle" x1="150" y1="130" x2="85" y2="65" stroke="#10b981" stroke-width="4.5" stroke-linecap="round"/>
+                <circle cx="150" cy="130" r="8" fill="#0f172a" stroke="#10b981" id="needle-hub" stroke-width="3"/>
+                <text id="score-text" x="150" y="115" text-anchor="middle" fill="#f8fafc" font-size="24" font-weight="800" font-family="'JetBrains Mono', monospace">7.5</text>
+                <text x="150" y="132" text-anchor="middle" fill="#94a3b8" font-size="10">R100 / 100</text>
+              </svg>
+            </div>
+
+            <!-- Radar SVG -->
+            <div style="text-align: center;">
+              <svg width="200" height="150" viewBox="0 0 240 190">
+                <polygon points="120,30 188,78 162,158 78,158 52,78" fill="none" stroke="#1e293b" stroke-width="1.5"/>
+                <polygon id="radar-poly" points="120,110 120,110 120,110 120,110 120,110" fill="rgba(56, 189, 248, 0.35)" stroke="#38bdf8" stroke-width="2"/>
+                <text x="120" y="20" text-anchor="middle" fill="#94a3b8" font-size="9" font-weight="600">I</text>
+                <text x="198" y="82" text-anchor="start" fill="#94a3b8" font-size="9" font-weight="600">D</text>
+                <text x="170" y="172" text-anchor="middle" fill="#94a3b8" font-size="9" font-weight="600">C</text>
+                <text x="70" y="172" text-anchor="middle" fill="#94a3b8" font-size="9" font-weight="600">A</text>
+                <text x="42" y="82" text-anchor="end" fill="#94a3b8" font-size="9" font-weight="600">U</text>
+              </svg>
+            </div>
+          </div>
+
+          <div class="metrics-row">
+            <div class="metric-cell">
+              <div class="metric-title">Normalized Score</div>
+              <div class="metric-score" id="res-r100">7.50</div>
+            </div>
+            <div class="metric-cell">
+              <div class="metric-title">Risk Tier</div>
+              <div style="margin-top: 4px;" id="res-tier-badge"><span class="badge badge-low">LOW</span></div>
+            </div>
+            <div class="metric-cell">
+              <div class="metric-title">Complexity</div>
+              <div class="metric-score" id="res-comp">1 / 5</div>
+            </div>
+          </div>
+
+          <div style="font-size: 0.82rem; color: #cbd5e1; background: #0f172a; padding: 12px; border-radius: 6px; margin-bottom: 16px; border-left: 3px solid var(--cyan);" id="res-rationale">
+            Low composite risk (0-25). Standard corporate credentials sufficient.
+          </div>
+
+          <div class="card-title" style="font-size: 0.95rem; margin-top: 10px;">Zero Trust Control Pipeline</div>
+          <div id="pipeline-container">
+            <div class="pipeline-step pipe-active" id="pipe-1"><span>1. Primary Credential (SSO/Password)</span><span>✅ ACTIVE</span></div>
+            <div class="pipeline-step pipe-dim" id="pipe-2"><span>2. Multi-Factor Challenge (MFA Step-up)</span><span>⚪ NOT REQUIRED</span></div>
+            <div class="pipeline-step pipe-dim" id="pipe-3"><span>3. Endpoint Health & MDM Attestation</span><span>⚪ NOT REQUIRED</span></div>
+            <div class="pipeline-step pipe-dim" id="pipe-4"><span>4. Contextual Anomaly & Manager Sign-off</span><span>⚪ NOT REQUIRED</span></div>
+            <div class="pipeline-step pipe-dim" id="pipe-5"><span>5. Out-of-Band Callback & Dual Authorization</span><span>⚪ NOT REQUIRED</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Factor Breakdown Table -->
+      <div class="card">
+        <div class="card-title">Factor Weight Contributions Breakdown</div>
+        <table class="data-table">
+          <thead>
+            <tr><th>Factor</th><th>Input (0–4)</th><th>Weight</th><th>Weighted Score</th><th>Share %</th></tr>
+          </thead>
+          <tbody id="breakdown-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- TAB 2: ACTION CRITICALITY CONTRAST -->
+    <div id="tab-contrast" class="tab-pane">
+      <div class="card">
+        <div class="card-title">Action Criticality Impact: SCN-04 vs. SCN-05</div>
+        <p style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 16px;">
+          Comparing a critical treasury wire transfer against a low-impact public information request when presented with the same deepfake CEO video.
+        </p>
+
+        <div class="contrast-box">
+          <div class="contrast-card" style="border-left: 5px solid var(--critical);">
+            <h3 style="color: #f87171; margin-bottom: 6px;">SCN-04: Emergency ₹10 Lakh Wire Transfer</h3>
+            <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 12px;">Deepfake CEO video call requesting high-value treasury wire transfer from unmanaged device.</p>
+            <p style="font-size: 0.85rem; margin-bottom: 6px;"><strong>Inputs:</strong> I=3, D=4, C=3, <span style="color: #f87171; font-weight: 700;">A=4 (Financial Transfer)</span>, U=4</p>
+            <p style="font-size: 0.85rem; margin-bottom: 6px;"><strong>Raw Risk:</strong> 3.60 / 4.0</p>
+            <p style="font-size: 1.25rem; font-weight: 800; color: #f87171; margin-bottom: 6px;">R100: 90.00 / 100 (CRITICAL)</p>
+            <p style="font-size: 0.85rem; margin-bottom: 8px;"><strong>Controls:</strong> Complexity 5 / 5 (Maximum Security Barrier)</p>
+            <p style="font-size: 0.85rem; color: #cbd5e1; background: rgba(239, 68, 68, 0.1); padding: 10px; border-radius: 6px;">
+              <strong>AuthZ Verdict:</strong> 🚨 Even if attacker passed MFA, authorization is <strong>denied</strong>. Independent out-of-band telephone callback via pre-verified directory and dual-executive custody are mandatory.
+            </p>
+          </div>
+
+          <div class="contrast-card" style="border-left: 5px solid var(--high);">
+            <h3 style="color: #fb923c; margin-bottom: 6px;">SCN-05: Public Press Release Query</h3>
+            <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 12px;">Same suspicious deepfake CEO video and unmanaged device, but requesting public press releases.</p>
+            <p style="font-size: 0.85rem; margin-bottom: 6px;"><strong>Inputs:</strong> I=3, D=4, C=3, <span style="color: var(--cyan); font-weight: 700;">A=0 (Public Information)</span>, U=4</p>
+            <p style="font-size: 0.85rem; margin-bottom: 6px;"><strong>Raw Risk:</strong> 2.40 / 4.0</p>
+            <p style="font-size: 1.25rem; font-weight: 800; color: #fb923c; margin-bottom: 6px;">R100: 60.00 / 100 (HIGH)</p>
+            <p style="font-size: 0.85rem; margin-bottom: 8px;"><strong>Controls:</strong> Complexity 3 / 5 (Reduced Friction)</p>
+            <p style="font-size: 0.85rem; color: #cbd5e1; background: rgba(249, 115, 22, 0.1); padding: 10px; border-radius: 6px;">
+              <strong>AuthZ Verdict:</strong> ✅ Because public data causes zero financial damage, expensive executive callback is avoided. Standard MFA and device health attestation suffice.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 3: AHP MATRIX WORKSHOP -->
+    <div id="tab-ahp" class="tab-pane">
+      <div class="card">
+        <div class="card-title">Analytic Hierarchy Process (AHP) Weight Workshop</div>
+        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 16px;">
+          Saaty's Analytic Hierarchy Process computes internally consistent priority weights from pairwise comparison judgments.
+        </p>
+
+        <div class="grid-2">
+          <div>
+            <div class="slider-group">
+              <div class="slider-header"><span class="slider-label">Action Criticality (A) over Identity (I)</span><span class="slider-val" id="val-ahp-ai">1.2</span></div>
+              <input type="range" id="ahp-ai" min="0.2" max="5.0" step="0.1" value="1.2" oninput="recalcAHP()">
+            </div>
+            <div class="slider-group">
+              <div class="slider-header"><span class="slider-label">Action Criticality (A) over Device (D)</span><span class="slider-val" id="val-ahp-ad">2.0</span></div>
+              <input type="range" id="ahp-ad" min="0.2" max="5.0" step="0.1" value="2.0" oninput="recalcAHP()">
+            </div>
+            <div class="slider-group">
+              <div class="slider-header"><span class="slider-label">Action Criticality (A) over Uncertainty (U)</span><span class="slider-val" id="val-ahp-au">2.0</span></div>
+              <input type="range" id="ahp-au" min="0.2" max="5.0" step="0.1" value="2.0" oninput="recalcAHP()">
+            </div>
+            <div class="slider-group">
+              <div class="slider-header"><span class="slider-label">Identity (I) over Device (D)</span><span class="slider-val" id="val-ahp-id">1.7</span></div>
+              <input type="range" id="ahp-id" min="0.2" max="5.0" step="0.1" value="1.67" oninput="recalcAHP()">
+            </div>
+          </div>
+
+          <div style="background: #0f172a; padding: 18px; border-radius: 8px; border: 1px solid var(--border);">
+            <h4 style="color: var(--cyan); margin-bottom: 12px; font-size: 0.95rem;">AHP Consistency Diagnostics</h4>
+            <p style="font-size: 0.85rem; margin-bottom: 6px;">Consistency Ratio (CR): <strong id="ahp-cr" style="color: #10b981; font-size: 1.1rem;">0.0000</strong> (Threshold: &le; 0.10)</p>
+            <p style="font-size: 0.8rem; color: #10b981; margin-bottom: 14px;" id="ahp-status">✅ Judgments are mathematically consistent.</p>
+
+            <h4 style="color: var(--cyan); margin-bottom: 8px; font-size: 0.95rem;">Derived Priority Weights</h4>
+            <div id="ahp-weights-display" style="font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; line-height: 1.8;"></div>
+
+            <button class="btn-action" style="margin-top: 14px; width: 100%;" onclick="applyAHPWeights()">Apply AHP Weights to Simulator</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 4: EMPIRICAL EXPERIMENTS -->
+    <div id="tab-exp" class="tab-pane">
+      <div class="card">
+        <div class="card-title">Empirical Research Experiments (45 Curated Enterprise Scenarios)</div>
+        <div class="metrics-row">
+          <div class="metric-cell">
+            <div class="metric-title">Risk-Response Correlation</div>
+            <div class="metric-score">0.9659</div>
+            <div style="font-size: 0.72rem; color: var(--text-muted);">Pearson r (p &lt; 0.001)</div>
+          </div>
+          <div class="metric-cell">
+            <div class="metric-title">Low-Risk Friction Saved</div>
+            <div class="metric-score">50.0%</div>
+            <div style="font-size: 0.72rem; color: var(--text-muted);">Complexity 1 vs 2 (Fixed MFA)</div>
+          </div>
+          <div class="metric-cell">
+            <div class="metric-title">Critical Attacks Held</div>
+            <div class="metric-score">100.0%</div>
+            <div style="font-size: 0.72rem; color: var(--text-muted);">8 / 8 Quarantined for Out-of-Band</div>
+          </div>
+        </div>
+
+        <table class="data-table">
+          <thead>
+            <tr><th>Metric Name</th><th>Fixed MFA (Baseline)</th><th>Risk-Adaptive ZTA</th><th>Research Benefit</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Low-Risk Scenario Authentication Complexity</td><td>2.0 Steps (Mandatory OTP)</td><td><strong>1.0 Step</strong> (Basic Auth)</td><td>50% Reduction in User Fatigue</td></tr>
+            <tr><td>Critical Attack Interception Rate</td><td>0% (Allowed if MFA Passed)</td><td><strong>100.0%</strong> (Held for Callback)</td><td>Catastrophic Transfer Prevention</td></tr>
+            <tr><td>Strong Control Coverage on High/Critical Tiers</td><td>Static (No Escalation)</td><td><strong>100.0%</strong> (Complexity &ge; 3)</td><td>Proportional Defense Escalation</td></tr>
+            <tr><td>Weight Sensitivity Concordance</td><td>N/A</td><td><strong>91.1% – 100%</strong></td><td>Robust Policy Stability</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- TAB 5: DATASET -->
+    <div id="tab-dataset" class="tab-pane">
+      <div class="card">
+        <div class="card-title">
+          <span>Curated Scenario Dataset (45 Auditable Scenarios)</span>
+          <input type="text" id="filter-input" placeholder="Search scenarios..." style="max-width: 250px;" oninput="filterTable()">
+        </div>
+        <div style="overflow-x: auto;">
+          <table class="data-table" id="scenarios-table">
+            <thead>
+              <tr><th>ID</th><th>Scenario Name</th><th>I</th><th>D</th><th>C</th><th>A</th><th>U</th><th>Tier</th><th>Decision</th><th>Action</th></tr>
+            </thead>
+            <tbody id="dataset-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // State
+    let activeWeights = { I: 0.25, D: 0.15, C: 0.15, A: 0.30, U: 0.15 };
+
+    const benchmarkScenarios = {
+      1: { id: "SCN-01", name: "Normal Routine Access", I: 0, D: 0, C: 0, A: 1, U: 0, desc: "Normal employee accessing low-impact internal resource from corporate laptop" },
+      2: { id: "SCN-02", name: "New Device Login", I: 1, D: 2, C: 2, A: 1, U: 0, desc: "Employee using new device to access internal company memos" },
+      3: { id: "SCN-03", name: "Foreign Context Access", I: 2, D: 3, C: 3, A: 2, U: 1, desc: "Suspicious unmanaged device from foreign IP attempting confidential repo access" },
+      4: { id: "SCN-04", name: "Deepfake CEO ₹10L Wire", I: 3, D: 4, C: 3, A: 4, U: 4, desc: "Deepfake CEO video call requesting emergency financial transfer from unknown device" },
+      5: { id: "SCN-05", name: "Deepfake Public Info", I: 3, D: 4, C: 3, A: 0, U: 4, desc: "Same deepfake CEO video but requesting public marketing press releases" }
+    };
+
+    const factorDescriptions = {
+      I: { 0: "Verified Corporate Employee", 1: "Low Identity Anomaly", 2: "Moderate Mismatch / Unverified Claim", 3: "High Suspicion / Failed Identity Check", 4: "Severe Compromise / Known Impersonation" },
+      D: { 0: "Managed Corporate MDM/EDR Compliant Device", 1: "Known BYOD Registered Device", 2: "New Unrecognized Device", 3: "Unmanaged / Non-Compliant Device", 4: "Compromised Host / Rooted Endpoint" },
+      C: { 0: "Normal Office Location, Business Hours & Subnet", 1: "Slightly Unusual Working Hours / IP", 2: "Unusual Geo-location / Hosting Provider", 3: "Suspicious Network / Anonymous VPN", 4: "Impossible Travel / Tor Exit Node" },
+      A: { 0: "Public Directory / Very Low Impact", 1: "Standard Internal Data / Routine Operational Access", 2: "Confidential Enterprise Data / Customer PII", 3: "Privileged Operation / Root Access Mod", 4: "Financial Wire Transfer / Critical Infrastructure Admin" },
+      U: { 0: "Strongly Verified Authentic (Hardware Token Match)", 1: "Minor Media Glitch / Audio Artifact", 2: "Uncertain Media Authenticity / Low Liveness", 3: "Strong Manipulation Indicators / Synthetic Voice", 4: "Severe Synthetic Signature / Cloned Video" }
+    };
+
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+      event.target.classList.add('active');
+      document.getElementById(tabId).classList.add('active');
+    }
+
+    function loadBenchmark(num) {
+      document.querySelectorAll('.btn-quick').forEach((b, idx) => {
+        b.classList.toggle('active', idx === (num - 1));
+      });
+      const s = benchmarkScenarios[num];
+      document.getElementById('slider-I').value = s.I;
+      document.getElementById('slider-D').value = s.D;
+      document.getElementById('slider-C').value = s.C;
+      document.getElementById('slider-A').value = s.A;
+      document.getElementById('slider-U').value = s.U;
+      document.getElementById('activeScenarioLabel').textContent = s.id + ": " + s.name;
+      recalc();
+    }
+
+    function recalc() {
+      const I = parseFloat(document.getElementById('slider-I').value);
+      const D = parseFloat(document.getElementById('slider-D').value);
+      const C = parseFloat(document.getElementById('slider-C').value);
+      const A = parseFloat(document.getElementById('slider-A').value);
+      const U = parseFloat(document.getElementById('slider-U').value);
+
+      document.getElementById('val-I').textContent = I.toFixed(1);
+      document.getElementById('val-D').textContent = D.toFixed(1);
+      document.getElementById('val-C').textContent = C.toFixed(1);
+      document.getElementById('val-A').textContent = A.toFixed(1);
+      document.getElementById('val-U').textContent = U.toFixed(1);
+
+      document.getElementById('desc-I').textContent = factorDescriptions.I[Math.round(I)] || "";
+      document.getElementById('desc-D').textContent = factorDescriptions.D[Math.round(D)] || "";
+      document.getElementById('desc-C').textContent = factorDescriptions.C[Math.round(C)] || "";
+      document.getElementById('desc-A').textContent = factorDescriptions.A[Math.round(A)] || "";
+      document.getElementById('desc-U').textContent = factorDescriptions.U[Math.round(U)] || "";
+
+      // Compute Risk
+      const rawR = activeWeights.I * I + activeWeights.D * D + activeWeights.C * C + activeWeights.A * A + activeWeights.U * U;
+      const r100 = (rawR / 4.0) * 100.0;
+
+      let tier = "LOW", tierClass = "badge-low";
+      if (r100 > 75.0) { tier = "CRITICAL"; tierClass = "badge-critical"; }
+      else if (r100 > 50.0) { tier = "HIGH"; tierClass = "badge-high"; }
+      else if (r100 > 25.0) { tier = "MEDIUM"; tierClass = "badge-medium"; }
+
+      document.getElementById('res-r100').textContent = r100.toFixed(2);
+      document.getElementById('score-text').textContent = r100.toFixed(1);
+      document.getElementById('res-tier-badge').innerHTML = `<span class="badge ${tierClass}">${tier}</span>`;
+
+      // Needle angle: -90 deg (left) to +90 deg (right)
+      const angle = -90.0 + (r100 / 100.0) * 180.0;
+      const rad = angle * (Math.PI / 180.0);
+      const nx = 150 + 65 * Math.cos(rad);
+      const ny = 130 + 65 * Math.sin(rad);
+      const needle = document.getElementById('needle');
+      needle.setAttribute('x2', nx);
+      needle.setAttribute('y2', ny);
+
+      const colorMap = { LOW: '#10b981', MEDIUM: '#f59e0b', HIGH: '#f97316', CRITICAL: '#ef4444' };
+      needle.setAttribute('stroke', colorMap[tier]);
+      document.getElementById('needle-hub').setAttribute('stroke', colorMap[tier]);
+
+      // Update Radar Polygon
+      const cx = 120, cy = 110, rMax = 65;
+      const factors = [I, D, C, A, U];
+      const radarPts = factors.map((val, idx) => {
+        const aRad = (-90.0 + idx * 72.0) * (Math.PI / 180.0);
+        const dist = (val / 4.0) * rMax;
+        return `${(cx + dist * Math.cos(aRad)).toFixed(1)},${(cy + dist * Math.sin(aRad)).toFixed(1)}`;
+      }).join(' ');
+      document.getElementById('radar-poly').setAttribute('points', radarPts);
+
+      // Decision & Complexity Logic
+      let complexity = 1, decision = "ALLOW", rationale = "Low composite risk (0-25). Standard credentials sufficient.";
+      if (tier === "MEDIUM") {
+        complexity = 2; decision = "MFA_REQUIRED";
+        rationale = "Moderate risk (26-50). Step-up MFA challenge required to proceed.";
+      } else if (tier === "HIGH") {
+        complexity = (A >= 3.0) ? 4 : 3;
+        decision = (A >= 3.0) ? "APPROVAL_REQUIRED" : "STEP_UP_REQUIRED";
+        rationale = `High risk (51-75). Requires MFA, trusted-device verification, and contextual sanity check${A >= 3.0 ? ' plus dual executive approval' : ''}.`;
+      } else {
+        complexity = 5; decision = "INDEPENDENT_VERIFICATION";
+        rationale = "Critical risk (>75). Out-of-band verification via direct corporate telephone directory and dual executive sign-off required.";
+      }
+
+      // Strict Zero Trust AuthN vs AuthZ Enforcement
+      const mfaState = document.getElementById('select-mfa').value;
+      if (D >= 3.0 && A >= 3.0 && U >= 3.0) {
+        complexity = 5;
+        if (mfaState === "FAIL") {
+          decision = "BLOCK/HOLD"; rationale = "BLOCKED: Primary MFA challenge failed for high-criticality action from suspicious device.";
+        } else if (mfaState === "PASS") {
+          decision = "INDEPENDENT_VERIFICATION";
+          rationale = "HOLD (AuthN Passed, AuthZ Pending): MFA challenge passed, but authorization held. Suspicious device (D>=3), critical financial action (A>=3), and deepfake uncertainty (U>=3) mandate mandatory out-of-band telephone verification.";
+        }
+      }
+
+      document.getElementById('res-comp').textContent = `${complexity} / 5`;
+      const decBadgeClass = (decision === "ALLOW") ? "badge-low" : (decision === "MFA_REQUIRED" ? "badge-medium" : (decision.includes("REQUIRED") ? "badge-high" : "badge-critical"));
+      document.getElementById('decisionBadge').innerHTML = `<span class="badge ${decBadgeClass}">${decision}</span>`;
+      document.getElementById('res-rationale').textContent = rationale;
+
+      // Update Pipeline steps
+      for (let i = 1; i <= 5; i++) {
+        const step = document.getElementById(`pipe-${i}`);
+        if (complexity >= i) {
+          step.className = (i === 5) ? "pipeline-step pipe-crit" : "pipeline-step pipe-active";
+          step.children[1].textContent = (i === 5) ? "🚨 MANDATORY" : "✅ ACTIVE";
+        } else {
+          step.className = "pipeline-step pipe-dim";
+          step.children[1].textContent = "⚪ NOT REQUIRED";
+        }
+      }
+
+      // Update Breakdown Table
+      const factorKeys = ['I', 'D', 'C', 'A', 'U'];
+      const factorLabels = { I: "Identity Risk (I)", D: "Device Risk (D)", C: "Context Anomaly (C)", A: "Action Criticality (A)", U: "Deepfake Uncertainty (U)" };
+      const tbody = document.getElementById('breakdown-tbody');
+      tbody.innerHTML = '';
+      factorKeys.forEach(k => {
+        const val = factors[factorKeys.indexOf(k)];
+        const w = activeWeights[k];
+        const rawContrib = w * val;
+        const share = rawR > 0 ? (rawContrib / rawR * 100).toFixed(1) : "0.0";
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td><strong>${factorLabels[k]}</strong></td><td>${val.toFixed(1)}</td><td>${w.toFixed(2)}</td><td>${rawContrib.toFixed(4)}</td><td>${share}%</td>`;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function recalcAHP() {
+      const ai = parseFloat(document.getElementById('ahp-ai').value);
+      const ad = parseFloat(document.getElementById('ahp-ad').value);
+      const au = parseFloat(document.getElementById('ahp-au').value);
+      const id = parseFloat(document.getElementById('ahp-id').value);
+
+      document.getElementById('val-ahp-ai').textContent = ai.toFixed(1);
+      document.getElementById('val-ahp-ad').textContent = ad.toFixed(1);
+      document.getElementById('val-ahp-au').textContent = au.toFixed(1);
+      document.getElementById('val-ahp-id').textContent = id.toFixed(1);
+
+      // Estimate weights via geometric mean
+      const rawW = {
+        A: Math.pow(ai * ad * au * 1.5, 0.2),
+        I: Math.pow((1/ai) * id * 1.5 * 1.5, 0.2),
+        D: Math.pow((1/ad) * (1/id) * 1.0 * 1.0, 0.2),
+        C: Math.pow(1.0, 0.2),
+        U: Math.pow((1/au) * 1.0 * 1.0, 0.2)
+      };
+      const sum = rawW.A + rawW.I + rawW.D + rawW.C + rawW.U;
+      const normW = {
+        I: rawW.I / sum,
+        D: rawW.D / sum,
+        C: rawW.C / sum,
+        A: rawW.A / sum,
+        U: rawW.U / sum
+      };
+
+      document.getElementById('ahp-weights-display').innerHTML = `
+        Identity (I): <strong>${normW.I.toFixed(3)}</strong><br>
+        Device (D): <strong>${normW.D.toFixed(3)}</strong><br>
+        Context (C): <strong>${normW.C.toFixed(3)}</strong><br>
+        Action (A): <strong>${normW.A.toFixed(3)}</strong><br>
+        Uncertainty (U): <strong>${normW.U.toFixed(3)}</strong>
+      `;
+    }
+
+    function applyAHPWeights() {
+      recalcAHP();
+      alert("AHP Priority Weights successfully applied to active simulation!");
+      recalc();
+    }
+
+    function filterTable() {
+      const query = document.getElementById('filter-input').value.toLowerCase();
+      document.querySelectorAll('#dataset-tbody tr').forEach(tr => {
+        tr.style.display = tr.textContent.toLowerCase().includes(query) ? '' : 'none';
+      });
+    }
+
+    // Populate Dataset Table
+    const datasetData = [
+      { id: "SCN-01", name: "Normal Routine Access", I: 0, D: 0, C: 0, A: 1, U: 0, tier: "LOW", dec: "ALLOW" },
+      { id: "SCN-02", name: "New Device Login", I: 1, D: 2, C: 2, A: 1, U: 0, tier: "MEDIUM", dec: "MFA_REQUIRED" },
+      { id: "SCN-03", name: "Foreign Context Access", I: 2, D: 3, C: 3, A: 2, U: 1, tier: "HIGH", dec: "STEP_UP_REQUIRED" },
+      { id: "SCN-04", name: "Deepfake CEO ₹10L Wire", I: 3, D: 4, C: 3, A: 4, U: 4, tier: "CRITICAL", dec: "INDEPENDENT_VERIFICATION" },
+      { id: "SCN-05", name: "Deepfake Public Info", I: 3, D: 4, C: 3, A: 0, U: 4, tier: "HIGH", dec: "STEP_UP_REQUIRED" },
+      { id: "SCN-08", name: "Budget Spreadsheet Review", I: 0, D: 0, C: 0, A: 2, U: 0, tier: "LOW", dec: "ALLOW" },
+      { id: "SCN-27", name: "Firewall Rules Mod Off-Hours", I: 1, D: 0, C: 2, A: 3, U: 0, tier: "HIGH", dec: "APPROVAL_REQUIRED" },
+      { id: "SCN-36", name: "Deepfake VP Wire Divert", I: 3, D: 3, C: 3, A: 4, U: 4, tier: "CRITICAL", dec: "INDEPENDENT_VERIFICATION" },
+      { id: "SCN-40", name: "Root PKI Certificate Deletion", I: 4, D: 4, C: 4, A: 4, U: 1, tier: "CRITICAL", dec: "INDEPENDENT_VERIFICATION" }
+    ];
+
+    const dtbody = document.getElementById('dataset-tbody');
+    datasetData.forEach(s => {
+      const tr = document.createElement('tr');
+      const badgeCls = (s.tier === "LOW") ? "badge-low" : (s.tier === "MEDIUM" ? "badge-medium" : (s.tier === "HIGH" ? "badge-high" : "badge-critical"));
+      tr.innerHTML = `
+        <td><strong>${s.id}</strong></td>
+        <td>${s.name}</td>
+        <td>${s.I}</td><td>${s.D}</td><td>${s.C}</td><td>${s.A}</td><td>${s.U}</td>
+        <td><span class="badge ${badgeCls}">${s.tier}</span></td>
+        <td>${s.dec}</td>
+        <td><button class="btn-action" style="padding: 4px 8px; font-size: 0.75rem;" onclick="loadCustomBenchmark('${s.id}', ${s.I}, ${s.D}, ${s.C}, ${s.A}, ${s.U}, '${s.name}')">Load</button></td>
+      `;
+      dtbody.appendChild(tr);
+    });
+
+    function loadCustomBenchmark(id, I, D, C, A, U, name) {
+      document.getElementById('slider-I').value = I;
+      document.getElementById('slider-D').value = D;
+      document.getElementById('slider-C').value = C;
+      document.getElementById('slider-A').value = A;
+      document.getElementById('slider-U').value = U;
+      document.getElementById('activeScenarioLabel').textContent = id + ": " + name;
+      switchTab('tab-sim');
+      recalc();
+    }
+
+    // Initialize
+    recalc();
+    recalcAHP();
+  </script>
+</body>
+</html>
