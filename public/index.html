@@ -1075,14 +1075,17 @@
 
       // Decision & Complexity Logic
       let complexity = 1, decision = "ALLOW", rationale = "Low composite risk (0-25). Standard credentials sufficient.";
-      if (tier === "MEDIUM") {
+      if (tier === "LOW") {
+        complexity = 1; decision = "ALLOW";
+        rationale = "Low composite risk (0-25). Standard credentials sufficient.";
+      } else if (tier === "MEDIUM") {
         complexity = 2; decision = "MFA_REQUIRED";
         rationale = "Moderate risk (26-50). Step-up MFA challenge required to proceed.";
       } else if (tier === "HIGH") {
         complexity = (A >= 3.0) ? 4 : 3;
         decision = (A >= 3.0) ? "APPROVAL_REQUIRED" : "STEP_UP_REQUIRED";
         rationale = `High risk (51-75). Requires MFA, trusted-device verification, and contextual sanity check${A >= 3.0 ? ' plus dual executive approval' : ''}.`;
-      } else {
+      } else if (tier === "CRITICAL") {
         complexity = 5; decision = "INDEPENDENT_VERIFICATION";
         rationale = "Critical risk (>75). Out-of-band verification via direct corporate telephone directory and dual executive sign-off required.";
       }
