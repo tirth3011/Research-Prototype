@@ -166,6 +166,13 @@ st.markdown("""
         border-radius: 10px;
         padding: 16px;
     }
+    @media (max-width: 768px) {
+        .main-title { font-size: 1.45rem !important; }
+        .sub-title { font-size: 0.82rem !important; }
+        .glass-card { padding: 12px 10px !important; }
+        .stat-value { font-size: 1.3rem !important; }
+        .pipeline-step { font-size: 0.78rem !important; padding: 7px 10px !important; }
+    }
 </style>
 """, unsafe_allow_html=True)
 

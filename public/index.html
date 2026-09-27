@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
   <title>Risk-Adaptive Zero Trust Framework | Deepfake Identity Mitigation</title>
   <meta name="description" content="A Risk-Adaptive Zero Trust Framework for Mitigating Deepfake-Based Identity Attacks in Enterprise Environments">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -24,8 +24,12 @@
       --high: #f97316;
       --critical: #ef4444;
     }
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
+    html, body { overflow-x: hidden; width: 100%; }
     body { background-color: var(--bg); color: var(--text); min-height: 100vh; padding: 20px 16px; line-height: 1.5; }
+    @media (max-width: 640px) {
+      body { padding: 12px 10px; }
+    }
     
     /* App Layout: Left Sidebar + Main Content */
     .app-layout {
@@ -37,7 +41,7 @@
       align-items: start;
     }
     @media (max-width: 1024px) {
-      .app-layout { grid-template-columns: 1fr; }
+      .app-layout { grid-template-columns: 1fr; gap: 16px; }
     }
 
     /* Sidebar: Simulation Controls */
@@ -50,6 +54,7 @@
       backdrop-filter: blur(10px);
       position: sticky;
       top: 20px;
+      z-index: 40;
     }
     .sidebar-title {
       font-size: 1.15rem;
@@ -58,10 +63,63 @@
       margin-bottom: 16px;
       display: flex;
       align-items: center;
+      justify-content: space-between;
       gap: 8px;
       border-bottom: 1px solid var(--border);
       padding-bottom: 10px;
+      user-select: none;
     }
+    .sidebar-toggle-btn {
+      display: none;
+      background: rgba(56, 189, 248, 0.12);
+      color: var(--cyan);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      padding: 5px 12px;
+      border-radius: 6px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      cursor: pointer;
+      align-items: center;
+      gap: 4px;
+      transition: background 0.15s;
+    }
+    .sidebar-toggle-btn:hover {
+      background: rgba(56, 189, 248, 0.2);
+    }
+    @media (max-width: 1024px) {
+      .sidebar-panel {
+        position: static;
+        padding: 14px 16px;
+        margin-bottom: 4px;
+      }
+      .sidebar-title {
+        cursor: pointer;
+        margin-bottom: 0;
+        border-bottom: none;
+        padding-bottom: 0;
+      }
+      .sidebar-title.is-open {
+        margin-bottom: 14px;
+        border-bottom: 1px solid var(--border);
+        padding-bottom: 10px;
+      }
+      .sidebar-toggle-btn {
+        display: inline-flex;
+      }
+      .sidebar-content {
+        display: none;
+      }
+      .sidebar-content.open {
+        display: block;
+        animation: fadeIn 0.2s ease-in-out;
+      }
+    }
+    @media (min-width: 1025px) {
+      .sidebar-content {
+        display: block !important;
+      }
+    }
+
     .sidebar-heading {
       font-size: 0.8rem;
       font-weight: 700;
@@ -84,17 +142,19 @@
       font-size: 0.86rem;
       color: #cbd5e1;
       cursor: pointer;
-      padding: 6px 8px;
+      padding: 8px 10px;
       border-radius: 6px;
       transition: background 0.15s;
+      min-height: 40px;
     }
     .radio-label:hover {
       background: rgba(255, 255, 255, 0.04);
     }
     .radio-label input[type="radio"] {
       accent-color: var(--cyan);
-      width: 16px;
-      height: 16px;
+      width: 18px;
+      height: 18px;
+      cursor: pointer;
     }
     .weights-list {
       list-style: none;
@@ -108,6 +168,7 @@
       justify-content: space-between;
       align-items: center;
       color: #cbd5e1;
+      padding: 2px 0;
     }
     .badge-pill {
       font-family: 'JetBrains Mono', monospace;
@@ -121,27 +182,91 @@
     }
 
     /* Main Container */
-    .main-content { min-width: 0; }
+    .main-content { min-width: 0; width: 100%; }
     
     /* Header */
-    header { margin-bottom: 20px; border-bottom: 1px solid var(--border); padding-bottom: 14px; }
-    .title-row { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
-    h1 { font-size: 1.85rem; font-weight: 800; background: linear-gradient(135deg, var(--cyan) 0%, var(--indigo) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-    .subtitle { color: var(--text-muted); font-size: 0.9rem; margin-top: 4px; }
-    .tag { background: rgba(56, 189, 248, 0.1); border: 1px solid rgba(56, 189, 248, 0.3); color: var(--cyan); padding: 4px 10px; border-radius: 999px; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+    header { margin-bottom: 18px; border-bottom: 1px solid var(--border); padding-bottom: 12px; }
+    .title-row { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
+    h1 { font-size: clamp(1.35rem, 4vw, 1.85rem); font-weight: 800; background: linear-gradient(135deg, var(--cyan) 0%, var(--indigo) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .subtitle { color: var(--text-muted); font-size: clamp(0.78rem, 2.5vw, 0.9rem); margin-top: 4px; }
+    .tag { background: rgba(56, 189, 248, 0.1); border: 1px solid rgba(56, 189, 248, 0.3); color: var(--cyan); padding: 4px 10px; border-radius: 999px; font-size: 0.72rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
 
     /* Notice Banner */
-    .banner { background: rgba(56, 189, 248, 0.05); border-left: 4px solid var(--cyan); padding: 12px 16px; border-radius: 6px; font-size: 0.85rem; color: #cbd5e1; margin-bottom: 20px; }
+    .banner { background: rgba(56, 189, 248, 0.05); border-left: 4px solid var(--cyan); padding: 10px 14px; border-radius: 6px; font-size: 0.82rem; color: #cbd5e1; margin-bottom: 16px; line-height: 1.5; }
 
     /* Quick Launcher Buttons */
-    .quick-launch-bar { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px; }
-    .btn-quick { background: var(--surface); border: 1px solid var(--border); color: var(--text); padding: 9px 14px; border-radius: 8px; font-size: 0.82rem; font-weight: 600; cursor: pointer; transition: all 0.2s ease; display: inline-flex; align-items: center; gap: 8px; }
+    .quick-launch-bar {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      flex-wrap: nowrap;
+      -webkit-overflow-scrolling: touch;
+      padding-bottom: 8px;
+      margin-bottom: 18px;
+      scrollbar-width: thin;
+    }
+    .quick-launch-bar::-webkit-scrollbar {
+      height: 4px;
+    }
+    .quick-launch-bar::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 4px;
+    }
+    .btn-quick {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 9px 13px;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+      flex-shrink: 0;
+      min-height: 40px;
+    }
     .btn-quick:hover { background: #1e293b; border-color: var(--cyan); transform: translateY(-1px); }
     .btn-quick.active { border-color: var(--cyan); background: rgba(56, 189, 248, 0.12); color: var(--cyan); }
 
     /* Tabs Navigation */
-    .tabs-nav { display: flex; gap: 8px; border-bottom: 1px solid var(--border); margin-bottom: 20px; overflow-x: auto; padding-bottom: 4px; }
-    .tab-btn { background: none; border: none; color: var(--text-muted); padding: 9px 14px; font-size: 0.88rem; font-weight: 600; cursor: pointer; border-radius: 6px; transition: all 0.2s; white-space: nowrap; }
+    .tabs-nav {
+      display: flex;
+      gap: 6px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 18px;
+      overflow-x: auto;
+      flex-wrap: nowrap;
+      -webkit-overflow-scrolling: touch;
+      padding-bottom: 6px;
+      scrollbar-width: thin;
+    }
+    .tabs-nav::-webkit-scrollbar {
+      height: 4px;
+    }
+    .tabs-nav::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 4px;
+    }
+    .tab-btn {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      padding: 10px 14px;
+      font-size: 0.84rem;
+      font-weight: 600;
+      cursor: pointer;
+      border-radius: 6px;
+      transition: all 0.2s;
+      white-space: nowrap;
+      flex-shrink: 0;
+      min-height: 42px;
+      display: inline-flex;
+      align-items: center;
+    }
     .tab-btn:hover { color: var(--text); background: rgba(255, 255, 255, 0.03); }
     .tab-btn.active { color: var(--cyan); background: rgba(56, 189, 248, 0.1); border-bottom: 2px solid var(--cyan); }
     .tab-pane { display: none; }
@@ -150,129 +275,309 @@
 
     /* Grid Layouts */
     .grid-2 { display: grid; grid-template-columns: 1.15fr 1fr; gap: 20px; }
-    @media (max-width: 960px) { .grid-2 { grid-template-columns: 1fr; } }
+    @media (max-width: 960px) { .grid-2 { grid-template-columns: 1fr; gap: 16px; } }
 
-    .card { background: var(--surface-glass); border: 1px solid var(--border); border-radius: 12px; padding: 20px; box-shadow: 0 8px 24px rgba(0,0,0,0.4); backdrop-filter: blur(8px); margin-bottom: 20px; }
-    .card-title { font-size: 1.05rem; font-weight: 700; margin-bottom: 14px; color: var(--text); display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); padding-bottom: 10px; }
+    .card { background: var(--surface-glass); border: 1px solid var(--border); border-radius: 12px; padding: 20px; box-shadow: 0 8px 24px rgba(0,0,0,0.4); backdrop-filter: blur(8px); margin-bottom: 18px; }
+    @media (max-width: 640px) {
+      .card { padding: 15px 12px; border-radius: 10px; margin-bottom: 14px; }
+    }
+    .card-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      margin-bottom: 14px;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 10px;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    @media (max-width: 480px) {
+      .card-title { font-size: 0.95rem; }
+    }
 
     /* Form & Sliders */
     .slider-group { margin-bottom: 16px; }
     .slider-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
     .slider-label { font-size: 0.85rem; font-weight: 600; color: #cbd5e1; }
     .slider-val { font-family: 'JetBrains Mono', monospace; font-size: 0.95rem; font-weight: 700; color: var(--cyan); }
-    .slider-desc { font-size: 0.75rem; color: var(--text-muted); margin-top: 4px; }
-    input[type="range"] { width: 100%; height: 6px; border-radius: 3px; background: #1e293b; outline: none; -webkit-appearance: none; }
-    input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 18px; height: 18px; border-radius: 50%; background: var(--cyan); cursor: pointer; box-shadow: 0 0 8px rgba(56, 189, 248, 0.6); transition: 0.15s; }
-    input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.15); }
+    .slider-desc { font-size: 0.74rem; color: var(--text-muted); margin-top: 4px; line-height: 1.35; }
+    
+    input[type="range"] {
+      width: 100%;
+      height: 8px;
+      border-radius: 4px;
+      background: #1e293b;
+      outline: none;
+      -webkit-appearance: none;
+      touch-action: pan-x;
+      cursor: pointer;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: var(--cyan);
+      cursor: pointer;
+      box-shadow: 0 0 10px rgba(56, 189, 248, 0.6);
+      transition: transform 0.15s;
+    }
+    input[type="range"]::-moz-range-thumb {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: var(--cyan);
+      cursor: pointer;
+      border: none;
+      box-shadow: 0 0 10px rgba(56, 189, 248, 0.6);
+    }
+    input[type="range"]:active::-webkit-slider-thumb { transform: scale(1.15); }
 
-    select, input[type="text"] { width: 100%; background: #0f172a; border: 1px solid var(--border); color: var(--text); padding: 9px 12px; border-radius: 6px; font-size: 0.85rem; outline: none; }
+    select, input[type="text"] {
+      width: 100%;
+      background: #0f172a;
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 10px 12px;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      outline: none;
+      min-height: 42px;
+    }
     select:focus, input[type="text"]:focus { border-color: var(--cyan); }
 
+    /* Charts Wrapper & Responsive SVGs */
+    .charts-wrapper {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+      gap: 14px;
+    }
+    .chart-box {
+      text-align: center;
+      flex: 1 1 170px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-width: 130px;
+    }
+    .gauge-svg {
+      width: 100%;
+      max-width: 220px;
+      height: auto;
+    }
+    .radar-svg {
+      width: 100%;
+      max-width: 200px;
+      height: auto;
+    }
+    @media (max-width: 480px) {
+      .gauge-svg { max-width: 175px; }
+      .radar-svg { max-width: 155px; }
+      .chart-box { flex: 1 1 130px; }
+    }
+
     /* Visual Metrics Box */
-    .metrics-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 20px; }
-    .metric-cell { background: #0f172a; border: 1px solid var(--border); border-radius: 8px; padding: 14px; text-align: center; }
-    .metric-title { font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase; font-weight: 600; margin-bottom: 4px; }
-    .metric-score { font-family: 'JetBrains Mono', monospace; font-size: 1.55rem; font-weight: 800; color: var(--cyan); }
+    .metrics-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+    .metric-cell {
+      background: #0f172a;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px 6px;
+      text-align: center;
+    }
+    .metric-title {
+      font-size: 0.68rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      font-weight: 600;
+      margin-bottom: 4px;
+      letter-spacing: 0.3px;
+    }
+    .metric-score {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: clamp(1.15rem, 3.5vw, 1.55rem);
+      font-weight: 800;
+      color: var(--cyan);
+    }
+    @media (max-width: 480px) {
+      .metrics-row { gap: 6px; }
+      .metric-cell { padding: 8px 4px; }
+      .metric-title { font-size: 0.62rem; }
+    }
 
     /* Badges */
-    .badge { display: inline-block; padding: 6px 14px; border-radius: 6px; font-weight: 700; font-size: 0.9rem; text-align: center; }
+    .badge { display: inline-block; padding: 5px 12px; border-radius: 6px; font-weight: 700; font-size: 0.88rem; text-align: center; }
     .badge-low { background: rgba(16, 185, 129, 0.15); color: var(--low); border: 1px solid var(--low); }
     .badge-medium { background: rgba(245, 158, 11, 0.15); color: var(--medium); border: 1px solid var(--medium); }
     .badge-high { background: rgba(249, 115, 22, 0.15); color: var(--high); border: 1px solid var(--high); }
     .badge-critical { background: rgba(239, 68, 68, 0.2); color: var(--critical); border: 1px solid var(--critical); box-shadow: 0 0 10px rgba(239, 68, 68, 0.3); }
 
     /* Visual Pipeline Steps */
-    .pipeline-step { display: flex; align-items: center; justify-content: space-between; padding: 9px 14px; border-radius: 6px; margin-bottom: 7px; font-size: 0.82rem; font-weight: 500; }
+    .pipeline-step {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 9px 12px;
+      border-radius: 6px;
+      margin-bottom: 7px;
+      font-size: 0.82rem;
+      font-weight: 500;
+      gap: 8px;
+    }
     .pipe-active { background: rgba(56, 189, 248, 0.1); border-left: 4px solid var(--cyan); color: #f8fafc; }
     .pipe-crit { background: rgba(239, 68, 68, 0.12); border-left: 4px solid var(--critical); color: #fca5a5; font-weight: 600; }
     .pipe-dim { background: rgba(255, 255, 255, 0.02); border-left: 4px solid #334155; color: #64748b; }
+    @media (max-width: 480px) {
+      .pipeline-step {
+        font-size: 0.74rem;
+        padding: 7px 10px;
+        flex-wrap: wrap;
+      }
+    }
 
-    /* Table */
-    .data-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; margin-top: 10px; }
-    .data-table th, .data-table td { padding: 9px 12px; text-align: left; border-bottom: 1px solid var(--border); }
-    .data-table th { color: var(--text-muted); font-weight: 600; background: rgba(15, 23, 42, 0.6); }
+    /* Table & Responsive Container */
+    .table-responsive {
+      width: 100%;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      margin-top: 10px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      scrollbar-width: thin;
+    }
+    .table-responsive::-webkit-scrollbar { height: 5px; }
+    .table-responsive::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.2); border-radius: 4px; }
+    
+    .data-table {
+      width: 100%;
+      min-width: 520px;
+      border-collapse: collapse;
+      font-size: 0.82rem;
+    }
+    .data-table th, .data-table td {
+      padding: 9px 12px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+      white-space: nowrap;
+    }
+    .data-table th { color: var(--text-muted); font-weight: 600; background: rgba(15, 23, 42, 0.7); }
 
     /* Contrast Box */
     .contrast-box { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-    @media (max-width: 768px) { .contrast-box { grid-template-columns: 1fr; } }
-    .contrast-card { background: #0f172a; border: 1px solid var(--border); border-radius: 10px; padding: 20px; }
+    @media (max-width: 768px) { .contrast-box { grid-template-columns: 1fr; gap: 14px; } }
+    .contrast-card { background: #0f172a; border: 1px solid var(--border); border-radius: 10px; padding: 18px; }
+    @media (max-width: 480px) { .contrast-card { padding: 14px 12px; } }
 
     /* Buttons */
-    .btn-action { background: var(--cyan); color: #0b0f19; border: none; padding: 10px 18px; border-radius: 6px; font-size: 0.85rem; font-weight: 700; cursor: pointer; transition: 0.15s; }
+    .btn-action {
+      background: var(--cyan);
+      color: #0b0f19;
+      border: none;
+      padding: 10px 18px;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: 0.15s;
+      min-height: 42px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
     .btn-action:hover { opacity: 0.9; transform: translateY(-1px); }
+
   </style>
 </head>
 <body>
   <div class="app-layout">
     
-    <!-- LEFT SIDEBAR: ⚙️ Simulation Controls -->
-    <aside class="sidebar-panel">
-      <div class="sidebar-title">
-        <span>⚙️ Simulation Controls</span>
+    <!-- LEFT SIDEBAR: ⚙️ Simulation Controls (Mobile Accordion / PC Sticky) -->
+    <aside class="sidebar-panel" id="sidebarPanel">
+      <div class="sidebar-title" onclick="toggleMobileSidebar()">
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <span>⚙️ Simulation Controls</span>
+          <span id="mobile-profile-badge" class="badge-pill" style="font-size: 0.72rem; padding: 2px 6px;">Proposed</span>
+        </div>
+        <button type="button" class="sidebar-toggle-btn" id="sidebarToggleBtn" aria-label="Toggle Simulation Controls">
+          <span id="sidebarChevron">⚙️ Weights ▼</span>
+        </button>
       </div>
 
-      <div style="margin-bottom: 16px;">
-        <span class="sidebar-heading">Active Weight Configuration:</span>
-        <div class="radio-group">
-          <label class="radio-label">
-            <input type="radio" name="weight-mode" value="proposed" checked onchange="setWeightMode('proposed')">
-            <span>Proposed Weights</span>
-          </label>
-          <label class="radio-label">
-            <input type="radio" name="weight-mode" value="equal" onchange="setWeightMode('equal')">
-            <span>Equal Weights (Baseline)</span>
-          </label>
-          <label class="radio-label">
-            <input type="radio" name="weight-mode" value="ahp" onchange="setWeightMode('ahp')">
-            <span>AHP-Derived Weights</span>
-          </label>
-          <label class="radio-label">
-            <input type="radio" name="weight-mode" value="custom" onchange="setWeightMode('custom')">
-            <span>Custom Weights</span>
-          </label>
+      <div class="sidebar-content" id="sidebarContent">
+        <div style="margin-bottom: 16px; margin-top: 10px;">
+          <span class="sidebar-heading">Active Weight Configuration:</span>
+          <div class="radio-group">
+            <label class="radio-label">
+              <input type="radio" name="weight-mode" value="proposed" checked onchange="setWeightMode('proposed')">
+              <span>Proposed Weights</span>
+            </label>
+            <label class="radio-label">
+              <input type="radio" name="weight-mode" value="equal" onchange="setWeightMode('equal')">
+              <span>Equal Weights (Baseline)</span>
+            </label>
+            <label class="radio-label">
+              <input type="radio" name="weight-mode" value="ahp" onchange="setWeightMode('ahp')">
+              <span>AHP-Derived Weights</span>
+            </label>
+            <label class="radio-label">
+              <input type="radio" name="weight-mode" value="custom" onchange="setWeightMode('custom')">
+              <span>Custom Weights</span>
+            </label>
+          </div>
         </div>
-      </div>
 
-      <!-- Fine-tune Factor Weights (visible when Custom is selected) -->
-      <div id="custom-sliders-box" style="display: none; background: #0f172a; padding: 12px; border-radius: 8px; border: 1px solid var(--border); margin-bottom: 16px;">
-        <span class="sidebar-heading" style="color: var(--cyan);">Fine-tune Factor Weights:</span>
-        <div class="slider-group" style="margin-bottom: 10px;">
-          <div class="slider-header"><span class="slider-label" style="font-size: 0.78rem;">w_I (Identity)</span><span class="slider-val" id="val-wI" style="font-size: 0.85rem;">0.25</span></div>
-          <input type="range" id="slider-wI" min="0" max="1" step="0.05" value="0.25" oninput="onCustomWeightChange()">
+        <!-- Fine-tune Factor Weights (visible when Custom is selected) -->
+        <div id="custom-sliders-box" style="display: none; background: #0f172a; padding: 12px; border-radius: 8px; border: 1px solid var(--border); margin-bottom: 16px;">
+          <span class="sidebar-heading" style="color: var(--cyan);">Fine-tune Factor Weights:</span>
+          <div class="slider-group" style="margin-bottom: 10px;">
+            <div class="slider-header"><span class="slider-label" style="font-size: 0.78rem;">w_I (Identity)</span><span class="slider-val" id="val-wI" style="font-size: 0.85rem;">0.25</span></div>
+            <input type="range" id="slider-wI" min="0" max="1" step="0.05" value="0.25" oninput="onCustomWeightChange()">
+          </div>
+          <div class="slider-group" style="margin-bottom: 10px;">
+            <div class="slider-header"><span class="slider-label" style="font-size: 0.78rem;">w_D (Device)</span><span class="slider-val" id="val-wD" style="font-size: 0.85rem;">0.15</span></div>
+            <input type="range" id="slider-wD" min="0" max="1" step="0.05" value="0.15" oninput="onCustomWeightChange()">
+          </div>
+          <div class="slider-group" style="margin-bottom: 10px;">
+            <div class="slider-header"><span class="slider-label" style="font-size: 0.78rem;">w_C (Context)</span><span class="slider-val" id="val-wC" style="font-size: 0.85rem;">0.15</span></div>
+            <input type="range" id="slider-wC" min="0" max="1" step="0.05" value="0.15" oninput="onCustomWeightChange()">
+          </div>
+          <div class="slider-group" style="margin-bottom: 10px;">
+            <div class="slider-header"><span class="slider-label" style="font-size: 0.78rem;">w_A (Action)</span><span class="slider-val" id="val-wA" style="font-size: 0.85rem;">0.30</span></div>
+            <input type="range" id="slider-wA" min="0" max="1" step="0.05" value="0.30" oninput="onCustomWeightChange()">
+          </div>
+          <div class="slider-group" style="margin-bottom: 10px;">
+            <div class="slider-header"><span class="slider-label" style="font-size: 0.78rem;">w_U (Uncertainty)</span><span class="slider-val" id="val-wU" style="font-size: 0.85rem;">0.15</span></div>
+            <input type="range" id="slider-wU" min="0" max="1" step="0.05" value="0.15" oninput="onCustomWeightChange()">
+          </div>
         </div>
-        <div class="slider-group" style="margin-bottom: 10px;">
-          <div class="slider-header"><span class="slider-label" style="font-size: 0.78rem;">w_D (Device)</span><span class="slider-val" id="val-wD" style="font-size: 0.85rem;">0.15</span></div>
-          <input type="range" id="slider-wD" min="0" max="1" step="0.05" value="0.15" oninput="onCustomWeightChange()">
-        </div>
-        <div class="slider-group" style="margin-bottom: 10px;">
-          <div class="slider-header"><span class="slider-label" style="font-size: 0.78rem;">w_C (Context)</span><span class="slider-val" id="val-wC" style="font-size: 0.85rem;">0.15</span></div>
-          <input type="range" id="slider-wC" min="0" max="1" step="0.05" value="0.15" oninput="onCustomWeightChange()">
-        </div>
-        <div class="slider-group" style="margin-bottom: 10px;">
-          <div class="slider-header"><span class="slider-label" style="font-size: 0.78rem;">w_A (Action)</span><span class="slider-val" id="val-wA" style="font-size: 0.85rem;">0.30</span></div>
-          <input type="range" id="slider-wA" min="0" max="1" step="0.05" value="0.30" oninput="onCustomWeightChange()">
-        </div>
-        <div class="slider-group" style="margin-bottom: 10px;">
-          <div class="slider-header"><span class="slider-label" style="font-size: 0.78rem;">w_U (Uncertainty)</span><span class="slider-val" id="val-wU" style="font-size: 0.85rem;">0.15</span></div>
-          <input type="range" id="slider-wU" min="0" max="1" step="0.05" value="0.15" oninput="onCustomWeightChange()">
-        </div>
-      </div>
 
-      <hr style="border: 0; border-top: 1px solid var(--border); margin: 14px 0;">
+        <hr style="border: 0; border-top: 1px solid var(--border); margin: 14px 0;">
 
-      <div style="margin-bottom: 16px;">
-        <span class="sidebar-heading">Current Multi-Signal Weights:</span>
-        <ul class="weights-list">
-          <li><span>• I (Identity Risk):</span> <span class="badge-pill" id="badge-wI">0.250</span></li>
-          <li><span>• D (Device Risk):</span> <span class="badge-pill" id="badge-wD">0.150</span></li>
-          <li><span>• C (Context Anomaly):</span> <span class="badge-pill" id="badge-wC">0.150</span></li>
-          <li><span>• A (Action Criticality):</span> <span class="badge-pill" id="badge-wA">0.300</span></li>
-          <li><span>• U (Uncertainty):</span> <span class="badge-pill" id="badge-wU">0.150</span></li>
-        </ul>
-      </div>
+        <div style="margin-bottom: 16px;">
+          <span class="sidebar-heading">Current Multi-Signal Weights:</span>
+          <ul class="weights-list">
+            <li><span>• I (Identity Risk):</span> <span class="badge-pill" id="badge-wI">0.250</span></li>
+            <li><span>• D (Device Risk):</span> <span class="badge-pill" id="badge-wD">0.150</span></li>
+            <li><span>• C (Context Anomaly):</span> <span class="badge-pill" id="badge-wC">0.150</span></li>
+            <li><span>• A (Action Criticality):</span> <span class="badge-pill" id="badge-wA">0.300</span></li>
+            <li><span>• U (Uncertainty):</span> <span class="badge-pill" id="badge-wU">0.150</span></li>
+          </ul>
+        </div>
 
-      <div style="font-size: 0.72rem; color: #64748b; margin-top: 20px; text-align: center; border-top: 1px solid var(--border); padding-top: 12px;">
-        Research Prototype | Cyber Security Simulation
+        <div style="font-size: 0.72rem; color: #64748b; margin-top: 16px; text-align: center; border-top: 1px solid var(--border); padding-top: 10px;">
+          Research Prototype | Cyber Security Simulation
+        </div>
       </div>
     </aside>
 
@@ -384,10 +689,10 @@
             </div>
 
             <!-- Speedometer & Radar Visuals -->
-            <div style="display: flex; justify-content: space-around; align-items: center; margin-bottom: 16px; flex-wrap: wrap;">
+            <div class="charts-wrapper">
               <!-- Speedometer SVG -->
-              <div style="text-align: center;">
-                <svg width="220" height="130" viewBox="0 0 300 160">
+              <div class="chart-box">
+                <svg class="gauge-svg" viewBox="0 0 300 160">
                   <path d="M 40 130 A 110 110 0 0 1 260 130" fill="none" stroke="#1e293b" stroke-width="22" stroke-linecap="round"/>
                   <path d="M 40 130 A 110 110 0 0 1 72 52" fill="none" stroke="#10b981" stroke-width="16" opacity="0.85"/>
                   <path d="M 72 52 A 110 110 0 0 1 150 20" fill="none" stroke="#f59e0b" stroke-width="16" opacity="0.85"/>
@@ -401,8 +706,8 @@
               </div>
 
               <!-- Radar SVG -->
-              <div style="text-align: center;">
-                <svg width="200" height="150" viewBox="0 0 240 190">
+              <div class="chart-box">
+                <svg class="radar-svg" viewBox="0 0 240 190">
                   <polygon points="120,30 188,78 162,158 78,158 52,78" fill="none" stroke="#1e293b" stroke-width="1.5"/>
                   <polygon id="radar-poly" points="120,110 120,110 120,110 120,110 120,110" fill="rgba(56, 189, 248, 0.35)" stroke="#38bdf8" stroke-width="2"/>
                   <text x="120" y="20" text-anchor="middle" fill="#94a3b8" font-size="9" font-weight="600">I</text>
@@ -447,12 +752,14 @@
         <!-- Factor Breakdown Table -->
         <div class="card">
           <div class="card-title">Factor Weight Contributions Breakdown</div>
+          <div class="table-responsive">
           <table class="data-table">
             <thead>
               <tr><th>Factor</th><th>Input (0–4)</th><th>Weight</th><th>Weighted Score</th><th>Share %</th></tr>
             </thead>
             <tbody id="breakdown-tbody"></tbody>
           </table>
+          </div>
         </div>
       </div>
 
@@ -556,6 +863,7 @@
             </div>
           </div>
 
+          <div class="table-responsive">
           <table class="data-table">
             <thead>
               <tr><th>Metric Name</th><th>Fixed MFA (Baseline)</th><th>Risk-Adaptive ZTA</th><th>Research Benefit</th></tr>
@@ -567,6 +875,7 @@
               <tr><td>Weight Sensitivity Concordance</td><td>N/A</td><td><strong>91.1% – 100%</strong></td><td>Robust Policy Stability</td></tr>
             </tbody>
           </table>
+          </div>
         </div>
       </div>
 
@@ -577,7 +886,7 @@
             <span>Curated Scenario Dataset (45 Auditable Scenarios)</span>
             <input type="text" id="filter-input" placeholder="Search scenarios..." style="max-width: 250px;" oninput="filterTable()">
           </div>
-          <div style="overflow-x: auto;">
+          <div class="table-responsive">
             <table class="data-table" id="scenarios-table">
               <thead>
                 <tr><th>ID</th><th>Scenario Name</th><th>I</th><th>D</th><th>C</th><th>A</th><th>U</th><th>Tier</th><th>Decision</th><th>Action</th></tr>
@@ -609,6 +918,21 @@
       A: { 0: "Public Directory / Very Low Impact", 1: "Standard Internal Data / Routine Operational Access", 2: "Confidential Enterprise Data / Customer PII", 3: "Privileged Operation / Root Access Mod", 4: "Financial Wire Transfer / Critical Infrastructure Admin" },
       U: { 0: "Strongly Verified Authentic (Hardware Token Match)", 1: "Minor Media Glitch / Audio Artifact", 2: "Uncertain Media Authenticity / Low Liveness", 3: "Strong Manipulation Indicators / Synthetic Voice", 4: "Severe Synthetic Signature / Cloned Video" }
     };
+
+        function toggleMobileSidebar() {
+      const content = document.getElementById('sidebarContent');
+      const chevron = document.getElementById('sidebarChevron');
+      const title = document.querySelector('.sidebar-title');
+      if (content.classList.contains('open')) {
+        content.classList.remove('open');
+        if (title) title.classList.remove('is-open');
+        if (chevron) chevron.textContent = '⚙️ Weights ▼';
+      } else {
+        content.classList.add('open');
+        if (title) title.classList.add('is-open');
+        if (chevron) chevron.textContent = '▲ Close Controls';
+      }
+    }
 
     function setWeightMode(mode) {
       const customBox = document.getElementById('custom-sliders-box');
@@ -663,6 +987,15 @@
       document.getElementById('badge-wC').textContent = activeWeights.C.toFixed(3);
       document.getElementById('badge-wA').textContent = activeWeights.A.toFixed(3);
       document.getElementById('badge-wU').textContent = activeWeights.U.toFixed(3);
+
+      const checkedRadio = document.querySelector('input[name="weight-mode"]:checked');
+      if (checkedRadio) {
+        const mobBadge = document.getElementById('mobile-profile-badge');
+        if (mobBadge) {
+          const modeVal = checkedRadio.value;
+          mobBadge.textContent = modeVal.charAt(0).toUpperCase() + modeVal.slice(1);
+        }
+      }
     }
 
     function switchTab(tabId) {
