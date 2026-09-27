@@ -1,0 +1,10 @@
+Metric Category,Metric Name,Value
+Security,High/Critical Strong Control Coverage,100.0%
+Security,Critical Scenario Hold/Verify Rate,100.0%
+Security,Risk-Response Pearson Correlation (r),0.9659
+Security,Risk-Response Spearman Correlation (rho),0.9521
+Authentication,Mean Complexity Overall,2.31 / 5
+Authentication,Low-Risk Authentication Friction Reduction,50.0%
+Model,Decision Stability (AHP vs Proposed),100.0%
+Model,Decision Stability (Equal vs Proposed),91.1%
+Model,AHP Consistency Ratio (CR),0.0000

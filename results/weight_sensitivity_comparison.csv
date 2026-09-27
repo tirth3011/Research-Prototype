@@ -1,0 +1,46 @@
+scenario_id,scenario_name,I,D,C,A,U,score_equal,score_prop,score_ahp,tier_equal,tier_prop,tier_ahp,decision_equal,decision_prop,decision_ahp,decision_match_equal_prop,decision_match_ahp_prop,decision_match_all
+SCN-01,Normal Employee Routine Internal Access,0.0,0.0,0.0,1.0,0.0,5.0,7.5,7.5,LOW,LOW,LOW,ALLOW,ALLOW,ALLOW,True,True,True
+SCN-02,Employee New Device First-Time Login,1.0,2.0,2.0,1.0,0.0,30.0,28.75,28.75,MEDIUM,MEDIUM,MEDIUM,MFA_REQUIRED,MFA_REQUIRED,MFA_REQUIRED,True,True,True
+SCN-03,Confidential Access via Suspicious Device,2.0,3.0,3.0,2.0,1.0,55.0,53.75,53.75,HIGH,HIGH,HIGH,STEP_UP_REQUIRED,STEP_UP_REQUIRED,STEP_UP_REQUIRED,True,True,True
+SCN-04,Deepfake CEO Video Urgent Financial Transfer,3.0,4.0,3.0,4.0,4.0,90.0,90.0,90.0,CRITICAL,CRITICAL,CRITICAL,INDEPENDENT_VERIFICATION,INDEPENDENT_VERIFICATION,INDEPENDENT_VERIFICATION,True,True,True
+SCN-05,Deepfake CEO Video Requesting Public Info,3.0,4.0,3.0,0.0,4.0,70.0,60.0,60.0,HIGH,HIGH,HIGH,STEP_UP_REQUIRED,STEP_UP_REQUIRED,STEP_UP_REQUIRED,True,True,True
+SCN-06,HR Associate Viewing Employee Public Directory,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,LOW,LOW,LOW,ALLOW,ALLOW,ALLOW,True,True,True
+SCN-07,Sales Rep Normal CRM Lead Access,0.0,0.0,0.0,1.0,0.0,5.0,7.5,7.5,LOW,LOW,LOW,ALLOW,ALLOW,ALLOW,True,True,True
+SCN-08,Finance Analyst Monthly Budget Review,0.0,0.0,0.0,2.0,0.0,10.0,15.0,15.0,LOW,LOW,LOW,ALLOW,ALLOW,ALLOW,True,True,True
+SCN-09,Software Engineer Submitting Routine PR,0.0,0.0,0.0,1.0,0.0,5.0,7.5,7.5,LOW,LOW,LOW,ALLOW,ALLOW,ALLOW,True,True,True
+SCN-10,Customer Support Viewing Knowledge Base,0.0,0.0,0.0,1.0,0.0,5.0,7.5,7.5,LOW,LOW,LOW,ALLOW,ALLOW,ALLOW,True,True,True
+SCN-11,Contractor Accessing Project Board,1.0,1.0,0.0,1.0,0.0,15.0,17.5,17.5,LOW,LOW,LOW,ALLOW,ALLOW,ALLOW,True,True,True
+SCN-12,Marketing Specialist Routine Social Post,0.0,1.0,0.0,0.0,0.0,5.0,3.75,3.75,LOW,LOW,LOW,ALLOW,ALLOW,ALLOW,True,True,True
+SCN-13,Employee Logging in from Coffee Shop Wi-Fi,0.0,0.0,2.0,1.0,0.0,15.0,15.0,15.0,LOW,LOW,LOW,ALLOW,ALLOW,ALLOW,True,True,True
+SCN-14,IT Admin Routine Status Health Check,0.0,0.0,0.0,1.0,0.0,5.0,7.5,7.5,LOW,LOW,LOW,ALLOW,ALLOW,ALLOW,True,True,True
+SCN-15,Employee Accessing Company Benefits Portal,1.0,1.0,0.0,2.0,0.0,20.0,25.0,25.0,LOW,LOW,LOW,ALLOW,ALLOW,ALLOW,True,True,True
+SCN-16,Sales Director Accessing CRM from Airport,0.0,1.0,2.0,2.0,0.0,25.0,26.25,26.25,LOW,MEDIUM,MEDIUM,ALLOW,MFA_REQUIRED,MFA_REQUIRED,False,True,False
+SCN-17,Engineer Accessing Production Logs Off-Hours,0.0,0.0,2.0,2.0,0.0,20.0,22.5,22.5,LOW,LOW,LOW,ALLOW,ALLOW,ALLOW,True,True,True
+SCN-18,Remote Employee First Login from Shared Coworking,1.0,2.0,2.0,1.0,0.0,30.0,28.75,28.75,MEDIUM,MEDIUM,MEDIUM,MFA_REQUIRED,MFA_REQUIRED,MFA_REQUIRED,True,True,True
+SCN-19,HR Generalist Updating Employee Profile,1.0,1.0,0.0,2.0,0.0,20.0,25.0,25.0,LOW,LOW,LOW,ALLOW,ALLOW,ALLOW,True,True,True
+SCN-20,Vendor Portal Access with Expired Certificate,1.0,3.0,1.0,1.0,0.0,30.0,28.75,28.75,MEDIUM,MEDIUM,MEDIUM,MFA_REQUIRED,MFA_REQUIRED,MFA_REQUIRED,True,True,True
+SCN-21,Manager Approving Standard Expense Report,0.0,0.0,0.0,1.0,0.0,5.0,7.5,7.5,LOW,LOW,LOW,ALLOW,ALLOW,ALLOW,True,True,True
+SCN-22,Employee Minor Audio Glitch on Support Call,0.0,0.0,0.0,1.0,1.0,10.0,11.25,11.25,LOW,LOW,LOW,ALLOW,ALLOW,ALLOW,True,True,True
+SCN-23,Admin Elevating Privileges on Staging Server,1.0,0.0,1.0,3.0,0.0,25.0,32.5,32.5,LOW,MEDIUM,MEDIUM,ALLOW,MFA_REQUIRED,MFA_REQUIRED,False,True,False
+SCN-24,Executive Off-Hours Strategic Plan Access,1.0,1.0,2.0,2.0,0.0,30.0,32.5,32.5,MEDIUM,MEDIUM,MEDIUM,MFA_REQUIRED,MFA_REQUIRED,MFA_REQUIRED,True,True,True
+SCN-25,Contractor Accessing High-Level Architecture,2.0,3.0,2.0,2.0,0.0,45.0,46.25,46.25,MEDIUM,MEDIUM,MEDIUM,MFA_REQUIRED,MFA_REQUIRED,MFA_REQUIRED,True,True,True
+SCN-26,DBA Initiating Database Schema Migration,1.0,1.0,1.0,3.0,0.0,30.0,36.25,36.25,MEDIUM,MEDIUM,MEDIUM,MFA_REQUIRED,MFA_REQUIRED,MFA_REQUIRED,True,True,True
+SCN-27,DevOps Engineer Modifying Production Firewall,1.0,0.0,2.0,3.0,0.0,30.0,36.25,36.25,MEDIUM,MEDIUM,MEDIUM,MFA_REQUIRED,MFA_REQUIRED,MFA_REQUIRED,True,True,True
+SCN-28,Finance Manager Processing Large Batch Payroll,1.0,0.0,1.0,4.0,0.0,30.0,40.0,40.0,MEDIUM,MEDIUM,MEDIUM,MFA_REQUIRED,MFA_REQUIRED,MFA_REQUIRED,True,True,True
+SCN-29,Security Analyst Downloading Raw Traffic Captures,1.0,0.0,0.0,2.0,0.0,15.0,21.25,21.25,LOW,LOW,LOW,ALLOW,ALLOW,ALLOW,True,True,True
+SCN-30,Employee Impossible Travel Login from Two Continents,2.0,2.0,4.0,1.0,0.0,45.0,42.5,42.5,MEDIUM,MEDIUM,MEDIUM,MFA_REQUIRED,MFA_REQUIRED,MFA_REQUIRED,True,True,True
+SCN-31,Unregistered Mobile Device Requesting Customer PII,2.0,3.0,1.0,2.0,0.0,40.0,42.5,42.5,MEDIUM,MEDIUM,MEDIUM,MFA_REQUIRED,MFA_REQUIRED,MFA_REQUIRED,True,True,True
+SCN-32,Synthetic Audio Helpdesk Password Reset,3.0,3.0,3.0,3.0,3.0,75.0,75.0,75.0,HIGH,HIGH,HIGH,INDEPENDENT_VERIFICATION,INDEPENDENT_VERIFICATION,INDEPENDENT_VERIFICATION,True,True,True
+SCN-33,Deepfake Video of CFO Requesting Confidential M&A File,3.0,1.0,2.0,2.0,3.0,55.0,56.25,56.25,HIGH,HIGH,HIGH,STEP_UP_REQUIRED,STEP_UP_REQUIRED,STEP_UP_REQUIRED,True,True,True
+SCN-34,Suspicious Script Accessing Customer Payment Tokens,3.0,4.0,3.0,3.0,0.0,65.0,67.5,67.5,HIGH,HIGH,HIGH,APPROVAL_REQUIRED,APPROVAL_REQUIRED,APPROVAL_REQUIRED,True,True,True
+SCN-35,Contractor Attempting Lateral Movement to Core DC,3.0,3.0,4.0,3.0,1.0,70.0,71.25,71.25,HIGH,HIGH,HIGH,APPROVAL_REQUIRED,APPROVAL_REQUIRED,APPROVAL_REQUIRED,True,True,True
+SCN-36,Deepfake VP Voice Authorizing Wire Divert,3.0,3.0,3.0,4.0,4.0,85.0,86.25,86.25,CRITICAL,CRITICAL,CRITICAL,INDEPENDENT_VERIFICATION,INDEPENDENT_VERIFICATION,INDEPENDENT_VERIFICATION,True,True,True
+SCN-37,Executive Deepfake Video Live Streaming Board Credentials,4.0,4.0,4.0,3.0,4.0,95.0,92.5,92.5,CRITICAL,CRITICAL,CRITICAL,INDEPENDENT_VERIFICATION,INDEPENDENT_VERIFICATION,INDEPENDENT_VERIFICATION,True,True,True
+SCN-38,Deepfake CEO Audio Demanding Gift Card Codes,3.0,3.0,3.0,4.0,3.0,80.0,82.5,82.5,CRITICAL,CRITICAL,CRITICAL,INDEPENDENT_VERIFICATION,INDEPENDENT_VERIFICATION,INDEPENDENT_VERIFICATION,True,True,True
+SCN-39,Deepfake Board Member Requesting Immediate Wire Transfer,4.0,4.0,4.0,4.0,4.0,100.0,100.0,100.0,CRITICAL,CRITICAL,CRITICAL,INDEPENDENT_VERIFICATION,INDEPENDENT_VERIFICATION,INDEPENDENT_VERIFICATION,True,True,True
+SCN-40,Compromised Admin Key Rotating Root Certificates,4.0,4.0,4.0,4.0,1.0,85.0,88.75,88.75,CRITICAL,CRITICAL,CRITICAL,INDEPENDENT_VERIFICATION,INDEPENDENT_VERIFICATION,INDEPENDENT_VERIFICATION,True,True,True
+SCN-41,High Uncertainty Deepfake Video Requesting Holiday Schedule,1.0,1.0,0.0,0.0,4.0,30.0,25.0,25.0,MEDIUM,LOW,LOW,MFA_REQUIRED,ALLOW,ALLOW,False,True,False
+SCN-42,Low Uncertainty Identity Requesting Critical Wire Transfer,0.0,0.0,0.0,4.0,0.0,20.0,30.0,30.0,LOW,MEDIUM,MEDIUM,ALLOW,MFA_REQUIRED,MFA_REQUIRED,False,True,False
+SCN-43,Legitimate Traveling CEO in High-Risk Country,1.0,0.0,3.0,2.0,0.0,30.0,32.5,32.5,MEDIUM,MEDIUM,MEDIUM,MFA_REQUIRED,MFA_REQUIRED,MFA_REQUIRED,True,True,True
+SCN-44,Deepfake Audio Helpdesk Attack from Known Managed Device,2.0,0.0,0.0,3.0,4.0,45.0,50.0,50.0,MEDIUM,MEDIUM,MEDIUM,MFA_REQUIRED,MFA_REQUIRED,MFA_REQUIRED,True,True,True
+SCN-45,Full Compromise Multi-Vector Deepfake Identity Takeover,4.0,4.0,4.0,4.0,4.0,100.0,100.0,100.0,CRITICAL,CRITICAL,CRITICAL,INDEPENDENT_VERIFICATION,INDEPENDENT_VERIFICATION,INDEPENDENT_VERIFICATION,True,True,True
