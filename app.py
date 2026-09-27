@@ -290,14 +290,13 @@ def render_speedometer_gauge(norm_score: float, raw_score: float, risk_tier: str
     """
     Renders an interactive high-contrast SVG semi-circular gauge.
     """
-    # Angle calculation: 0 = -90 deg (left), 100 = +90 deg (right)
-    angle_deg = -90.0 + (norm_score / 100.0) * 180.0
-    angle_rad = math.radians(angle_deg)
+    # Angle calculation: sweeps from 180 deg (left, 0) clockwise across top to 0 deg (right, 100)
+    angle_rad = math.radians(180.0 - (norm_score / 100.0) * 180.0)
 
-    # Needle pointer endpoint (radius = 70)
+    # Needle pointer endpoint (radius = 65)
     cx, cy = 150, 130
     nx = cx + 65 * math.cos(angle_rad)
-    ny = cy + 65 * math.sin(angle_rad)
+    ny = cy - 65 * math.sin(angle_rad)
 
     color_map = {
         'LOW': '#10b981',
@@ -331,12 +330,12 @@ def render_speedometer_gauge(norm_score: float, raw_score: float, risk_tier: str
         <text x="256" y="148" fill="#64748b" font-size="11" font-weight="600">100</text>
 
         <!-- Needle -->
-        <line x1="{cx}" y1="{cy}" x2="{nx}" y2="{ny}" stroke="{needle_color}" stroke-width="4.5" stroke-linecap="round"/>
-        <circle cx="{cx}" cy="{cy}" r="9" fill="#0f172a" stroke="{needle_color}" stroke-width="3.5"/>
+        <line x1="{cx}" y1="{cy}" x2="{nx:.1f}" y2="{ny:.1f}" stroke="{needle_color}" stroke-width="4.5" stroke-linecap="round"/>
+        <circle cx="{cx}" cy="{cy}" r="7" fill="#0f172a" stroke="{needle_color}" stroke-width="3"/>
 
         <!-- Central Score -->
-        <text x="{cx}" y="115" text-anchor="middle" fill="#f8fafc" font-size="26" font-weight="800" font-family="'JetBrains Mono', monospace">{norm_score:.1f}</text>
-        <text x="{cx}" y="132" text-anchor="middle" fill="#94a3b8" font-size="11">R100 / 100</text>
+        <text x="{cx}" y="100" text-anchor="middle" fill="#f8fafc" font-size="24" font-weight="800" font-family="'JetBrains Mono', monospace">{norm_score:.1f}</text>
+        <text x="{cx}" y="118" text-anchor="middle" fill="#94a3b8" font-size="10">R100 / 100</text>
       </svg>
     </div>
     """

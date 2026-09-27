@@ -225,10 +225,10 @@
                 <path d="M 72 52 A 110 110 0 0 1 150 20" fill="none" stroke="#f59e0b" stroke-width="16" opacity="0.85"/>
                 <path d="M 150 20 A 110 110 0 0 1 228 52" fill="none" stroke="#f97316" stroke-width="16" opacity="0.85"/>
                 <path d="M 228 52 A 110 110 0 0 1 260 130" fill="none" stroke="#ef4444" stroke-width="16" opacity="0.85"/>
-                <line id="needle" x1="150" y1="130" x2="85" y2="65" stroke="#10b981" stroke-width="4.5" stroke-linecap="round"/>
-                <circle cx="150" cy="130" r="8" fill="#0f172a" stroke="#10b981" id="needle-hub" stroke-width="3"/>
-                <text id="score-text" x="150" y="115" text-anchor="middle" fill="#f8fafc" font-size="24" font-weight="800" font-family="'JetBrains Mono', monospace">7.5</text>
-                <text x="150" y="132" text-anchor="middle" fill="#94a3b8" font-size="10">R100 / 100</text>
+                <line id="needle" x1="150" y1="130" x2="85" y2="130" stroke="#10b981" stroke-width="4.5" stroke-linecap="round" style="transition: all 0.25s ease;"/>
+                <circle cx="150" cy="130" r="7" fill="#0f172a" stroke="#10b981" id="needle-hub" stroke-width="3"/>
+                <text id="score-text" x="150" y="100" text-anchor="middle" fill="#f8fafc" font-size="24" font-weight="800" font-family="'JetBrains Mono', monospace">7.5</text>
+                <text x="150" y="118" text-anchor="middle" fill="#94a3b8" font-size="10">R100 / 100</text>
               </svg>
             </div>
 
@@ -494,14 +494,13 @@
       document.getElementById('score-text').textContent = r100.toFixed(1);
       document.getElementById('res-tier-badge').innerHTML = `<span class="badge ${tierClass}">${tier}</span>`;
 
-      // Needle angle: -90 deg (left) to +90 deg (right)
-      const angle = -90.0 + (r100 / 100.0) * 180.0;
-      const rad = angle * (Math.PI / 180.0);
+      // Needle angle: sweeps from 180 deg (left, 0) clockwise across top to 0 deg (right, 100)
+      const rad = (Math.PI / 180.0) * (180.0 - (r100 / 100.0) * 180.0);
       const nx = 150 + 65 * Math.cos(rad);
-      const ny = 130 + 65 * Math.sin(rad);
+      const ny = 130 - 65 * Math.sin(rad);
       const needle = document.getElementById('needle');
-      needle.setAttribute('x2', nx);
-      needle.setAttribute('y2', ny);
+      needle.setAttribute('x2', nx.toFixed(1));
+      needle.setAttribute('y2', ny.toFixed(1));
 
       const colorMap = { LOW: '#10b981', MEDIUM: '#f59e0b', HIGH: '#f97316', CRITICAL: '#ef4444' };
       needle.setAttribute('stroke', colorMap[tier]);
