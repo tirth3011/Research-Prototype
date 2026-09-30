@@ -110,31 +110,32 @@ When the requested action changes from a financial wire transfer ($A=4$) to publ
 The simulation evaluates 45 curated enterprise scenarios across three experiments:
 
 ### Experiment 1: Risk-Response Consistency
-- **Objective:** Evaluate whether higher composite risk reliably triggers stronger Zero Trust controls.
+- **Research Question:** Does increasing assessed risk result in stronger Zero Trust controls?
 - **Results:**
-  - High/Critical Scenario Coverage with Strong Controls ($\ge 3$): **100.0%**
+  - High/Critical Scenario Coverage with Strong Controls ($\ge 3$): **100.0% Critical Scenario Control Coverage** (13 / 13 scenarios)
   - Pearson Linear Correlation ($r$): **$0.9659$** ($p < 0.001$)
   - Spearman Rank Correlation ($\rho$): **$0.9521$** ($p < 0.001$)
-  - Confirms strong monotonic scaling between composite risk and defensive barrier strength.
+  - *Academic Scope Note:* Observed across the curated synthetic enterprise scenarios evaluated in this prototype. This result should not be interpreted as 100% real-world deepfake detection or prevention.
 
 ### Experiment 2: Fixed MFA vs. Risk-Adaptive ZTA
-- **Objective:** Compare rigid uniform MFA against the dynamic Zero Trust framework.
+- **Comparison:** Compare rigid uniform MFA against the dynamic Zero Trust framework.
 - **Results:**
-  - **Low-Risk User Friction:** Risk-Adaptive ZTA achieves a **50.0% reduction** in authentication steps for benign low-risk requests (Complexity 1 vs. 2), significantly reducing MFA fatigue.
-  - **High-Risk Defense:** Fixed MFA blindly permits **8 of 8 critical attack scenarios** if the attacker has captured or replayed credentials/MFA. Conversely, Risk-Adaptive ZTA flags **100% of critical attacks** for out-of-band verification or quarantine.
+  - **Reduction in Authentication-Step Burden:** Risk-Adaptive ZTA achieves a **50.0% reduction in authentication-step burden** for benign low-risk requests (Complexity 1 vs. 2). *Measured using the number of authentication/verification steps required per scenario. No human user study was conducted.*
+  - **Critical Scenario Interception in Curated Simulation:** Fixed MFA blindly permits **8 of 8 critical attack scenarios** if the attacker has captured or replayed credentials/MFA. Conversely, Risk-Adaptive ZTA flags **100.0% of critical attack scenarios in curated simulation** for mandatory out-of-band verification or quarantine. *MFA success does not automatically authorize a high-risk action.*
 
 ### Experiment 3: Weight Sensitivity & AHP Derivation
-- **Objective:** Evaluate decision stability under alternative weighting models.
-- **AHP Model Diagnostics:**
+- **Research Goal:** Examine whether conclusions and risk tiers remain reasonably stable when factor weights change.
+- **AHP Model Diagnostics (AHP-Derived Expert-Informed Weights):**
   - Dimension $n = 5$, $\lambda_{\max} = 5.000$, Consistency Index $\text{CI} = 0.000$
-  - Consistency Ratio $\text{CR} = 0.0000 \le 0.10$ (**Consistent**)
+  - Consistency Ratio $\text{CR} = 0.0000 \le 0.10$ (**Internally Consistent Pairwise Judgments**)
+  - *Methodological Note:* Consistency does not establish that the weights are universally correct. Sensitivity analysis is used to examine the effect of alternative weight choices. CR = 0.0000 reflects exact mathematical transitivity across the baseline expert matrix.
   - AHP Weights: $w_I = 0.25, w_D = 0.15, w_C = 0.15, w_A = 0.30, w_U = 0.15$
-- **Decision Stability:**
-  - Equal Weights vs. Proposed Weights Concordance: **91.1%**
+- **Decision Stability Concordance:**
+  - Equal Weights vs. Proposed Weights Concordance: **91.1%** (41 / 45 scenario tier matches)
   - AHP Weights vs. Proposed Weights Concordance: **100.0%**
   - Concordance Across All Three Schemes: **91.1%**
   - Mean Absolute Score Difference: **$3.03$ points** on a 100-point scale.
-  - Demonstrates that the framework's authorization decisions are robust and not overly sensitive to minor weight shifts.
+  - Demonstrates that policy classifications are robust and do not collapse under alternative weighting models.
 
 ---
 

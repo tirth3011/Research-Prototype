@@ -473,13 +473,14 @@ st.markdown("""
 # ==============================================================================
 # TABS
 # ==============================================================================
-tab_sim, tab_contrast, tab_ahp, tab_whatif, tab_exp, tab_data = st.tabs([
+tab_sim, tab_contrast, tab_ahp, tab_whatif, tab_exp, tab_data, tab_method = st.tabs([
     "🎛️ Interactive Scenario Simulator",
     "⚖️ Deepfake Action Criticality (SCN-04 vs 05)",
     "📐 AHP Matrix Workshop",
     "📈 What-If Sensitivity Trajectory",
     "🧪 Empirical Experiments",
-    "📂 Curated Scenario Dataset"
+    "📂 Curated Scenario Dataset",
+    "📋 Methodology & Limitations"
 ])
 
 
@@ -617,8 +618,29 @@ with tab_sim:
                 icon = "⚪ NOT REQUIRED"
             st.markdown(f'<div class="pipeline-step {c_style}"><span>{name}</span><span style="margin-left: auto;">{icon}</span></div>', unsafe_allow_html=True)
 
+        # End-to-End Zero Trust Decision Chain
+        st.markdown("##### 🔗 End-to-End Zero Trust Decision Chain")
+        st.caption("Risk Assessment → Risk Level → Required Zero Trust Controls → Authentication / Verification → Authorization Decision → Final Decision")
+        st.markdown(f"""
+        <div style="background: rgba(15, 23, 42, 0.7); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 8px; padding: 12px; font-size: 0.82rem; margin-bottom: 12px;">
+          <div><strong>1. Risk Assessment:</strong> Raw R = {eval_res['raw_risk']:.2f} / 4.00 → Normalized R₁₀₀ = {eval_res['normalized_risk']:.2f} / 100</div>
+          <div style="color: #38bdf8; text-align: center; margin: 2px 0;">↓</div>
+          <div><strong>2. Risk Level:</strong> <span class="badge {tier_class}">{eval_res['risk_level']}</span></div>
+          <div style="color: #38bdf8; text-align: center; margin: 2px 0;">↓</div>
+          <div><strong>3. Required Controls:</strong> {', '.join(eval_res['controls_required'][:3])}{'...' if len(eval_res['controls_required']) > 3 else ''}</div>
+          <div style="color: #38bdf8; text-align: center; margin: 2px 0;">↓</div>
+          <div><strong>4. Verification Status:</strong> MFA: {auth_status['mfa']} | Device: {auth_status['device_attestation']} | OOB: {auth_status['oob_verification']}</div>
+          <div style="color: #38bdf8; text-align: center; margin: 2px 0;">↓</div>
+          <div><strong>5. Authorization Decision:</strong> AuthZ evaluated against risk tier and required evidence</div>
+          <div style="color: #38bdf8; text-align: center; margin: 2px 0;">↓</div>
+          <div><strong>6. Final Decision:</strong> <span class="badge {dec_class}">{eval_res['decision']}</span></div>
+        </div>
+        """, unsafe_allow_html=True)
+        st.warning("**Zero Trust Principle:** MFA success does not automatically authorize a high-risk action. Authorization remains dependent on the overall risk assessment and required Zero Trust controls.")
+
     # Factor Breakdown Table
-    st.markdown("##### 📊 Factor Contribution Breakdown")
+    st.markdown("##### 🔍 Why this score? (Factor Contribution Breakdown)")
+    st.caption("Formula: R = w_I·I + w_D·D + w_C·C + w_A·A + w_U·U | Normalized: R₁₀₀ = (R / 4) × 100")
     b_rows = []
     for k in ['I', 'D', 'C', 'A', 'U']:
         c = eval_res['contributions'][k]
@@ -626,12 +648,26 @@ with tab_sim:
             'Factor': c['label'],
             'Score (0–4)': f"{c['score']:.1f}",
             'Weight': f"{c['weight']:.3f}",
-            'Weighted Raw': f"{c['raw_contribution']:.4f}",
-            'Points (out of 100)': f"{c['norm_contribution_points']:.2f}",
-            'Contribution %': f"{c['percentage_of_total_risk']:.1f}%",
+            'Weighted Contribution': f"{c['raw_contribution']:.4f}",
+            'Normalized Points (/100)': f"{c['norm_contribution_points']:.2f}",
+            'Share of Risk %': f"{c['percentage_of_total_risk']:.1f}%",
             'Interpretation': c['description']
         })
     st.dataframe(pd.DataFrame(b_rows), hide_index=True, use_container_width=True)
+
+    with st.expander("📖 Risk Factor Scoring Guide (0–4 Scale Rubric)"):
+        st.markdown("""
+        **Operational Scale:** `0 = Very Low / Normal`, `1 = Low`, `2 = Moderate`, `3 = High`, `4 = Very High / Critical`.
+        *Notice: These definitions represent the prototype's operational scoring definitions for simulation and academic evaluation, not universally standardized industry scores.*
+
+        | Risk Factor | 0 (Very Low) | 1 (Low) | 2 (Moderate) | 3 (High) | 4 (Very High / Critical) |
+        | :--- | :--- | :--- | :--- | :--- | :--- |
+        | **Identity Risk ($I$)** | Strong verified identity | Minor identity concern | Some identity uncertainty | Significant identity concern | Highly suspicious evidence |
+        | **Device Risk ($D$)** | Trusted managed device | Known device, minor concern | Partially trusted/unusual | Untrusted or anomalous | Highly suspicious/unknown |
+        | **Context Anomaly ($C$)** | Normal context | Minor deviation | Moderately unusual | Strongly anomalous | Highly abnormal context |
+        | **Action Criticality ($A$)** | Public / low impact | Routine internal action | Moderately sensitive | Sensitive business action | Major wire transfer / root change |
+        | **Deepfake Uncertainty ($U$)** | Strong authenticity | Low uncertainty | Moderate uncertainty | High uncertainty | Very high manipulation concern |
+        """)
 
 
 # ==============================================================================
@@ -639,6 +675,7 @@ with tab_sim:
 # ==============================================================================
 with tab_contrast:
     st.subheader("Action Criticality Impact: SCN-04 vs. SCN-05")
+    st.info("**Core Research Insight:** The framework is action-sensitive: the same identity uncertainty can require different controls depending on the potential impact of the requested action.")
     st.markdown("""
     A fundamental flaw of binary deepfake detectors is that they treat synthetic media as an all-or-nothing block.
     In contrast, this Zero Trust framework demonstrates that **Action Criticality ($A$) radically alters the authorization policy**,
@@ -749,7 +786,8 @@ with tab_ahp:
         cr_color = "#10b981" if c['is_consistent'] else "#ef4444"
         st.markdown(f"- **Consistency Ratio (CR):** <span style='font-size: 1.3rem; font-weight: 800; color: {cr_color};'>{cr_val:.4f}</span> (Threshold: $\le 0.10$)", unsafe_allow_html=True)
         if c['is_consistent']:
-            st.success("✅ Judgments are mathematically consistent.")
+            st.success("✅ Consistency Ratio indicates internally consistent pairwise judgments.")
+            st.caption("Consistency does not establish that the weights are universally correct. Sensitivity analysis is used to examine the effect of alternative weight choices. Note on CR = 0.0000: Indicates exact mathematical transitivity across the baseline expert pairwise matrix.")
         else:
             st.error("❌ Judgments conflict; adjust comparison sliders to improve transitivity.")
 
@@ -838,19 +876,21 @@ with tab_whatif:
 # TAB 5: EMPIRICAL EXPERIMENTS
 # ==============================================================================
 with tab_exp:
-    st.subheader("Empirical Experiments on 45 Enterprise Scenarios")
+    st.subheader("Empirical Experiments on 45 Enterprise Scenarios (Synthetic Scenario Evaluation)")
+    st.info("Synthetic Scenario Evaluation Notice: These metrics reflect the current synthetic/curated evaluation set and are not a benchmark of real-world deepfake detection performance. Observed across the curated synthetic enterprise scenarios evaluated in this prototype. This result should not be interpreted as 100% real-world deepfake detection or prevention.")
     runner = ExperimentRunner("simulation/scenarios.csv")
 
     exp_choice = st.radio("Choose Experiment to Inspect:", ["Experiment 1: Risk-Response Consistency", "Experiment 2: Fixed MFA vs Adaptive ZTA", "Experiment 3: Weight Sensitivity"], horizontal=True)
 
     if exp_choice == "Experiment 1: Risk-Response Consistency":
+        st.markdown("**Research Question:** Does increasing assessed risk result in stronger Zero Trust controls?")
         exp1 = runner.run_experiment_1(st.session_state.active_weights)
         s_m = exp1['security_metrics']
         
         c1, c2, c3 = st.columns(3)
         c1.metric("Pearson Correlation (r)", f"{s_m['risk_response_pearson_r']:.4f}", "p < 0.001")
         c2.metric("Spearman Rank (rho)", f"{s_m['risk_response_spearman_rho']:.4f}", "p < 0.001")
-        c3.metric("Strong Control Coverage", f"{s_m['proportion_high_crit_receiving_strong_controls']*100:.1f}%", "13 / 13 High/Critical")
+        c3.metric("Critical Scenario Control Coverage", f"{s_m['proportion_high_crit_receiving_strong_controls']*100:.1f}%", "13 / 13 High/Critical")
 
         col_img1, col_img2 = st.columns(2)
         if os.path.exists("results/figures/risk_vs_complexity.png"):
@@ -859,16 +899,20 @@ with tab_exp:
             col_img2.image("results/figures/control_strength_by_level.png", caption="Figure 5: Control Activation Rates by Risk Tier")
 
     elif exp_choice == "Experiment 2: Fixed MFA vs Adaptive ZTA":
+        st.markdown("**Comparison:** Fixed MFA for every scenario versus Risk-adaptive authentication and control selection.")
         exp2 = runner.run_experiment_2(st.session_state.active_weights)
         c1, c2, c3 = st.columns(3)
-        c1.metric("Low-Risk Friction Saved", f"{exp2['low_risk_friction_reduction_percentage']:.1f}%", "Complexity 1 vs 2")
-        c2.metric("Critical Threats Caught by ZTA", f"{exp2['critical_attacks_held_by_zta_percentage']:.1f}%", "100% Intercepted")
+        c1.metric("Auth-Step Burden Reduction", f"{exp2['low_risk_friction_reduction_percentage']:.1f}%", "Complexity 1 vs 2")
+        c2.metric("Critical Scenario Interception", f"{exp2['critical_attacks_held_by_zta_percentage']:.1f}%", "8 / 8 Held for Callback")
         c3.metric("Under-Protected Threats in Fixed MFA", f"{exp2['critical_attacks_under_protected_by_fixed_mfa_count']} / {exp2['critical_threat_count']}", "Bypassed if MFA passes")
+
+        st.caption("Measured using the number of authentication/verification steps required per scenario. No human user study was conducted. MFA success does not automatically authorize a high-risk action. Authorization remains dependent on the overall risk assessment and required Zero Trust controls.")
 
         if os.path.exists("results/figures/fixed_vs_adaptive.png"):
             st.image("results/figures/fixed_vs_adaptive.png", caption="Figure 4: Comparative Evaluation - Fixed MFA vs Risk-Adaptive ZTA")
 
     else:
+        st.markdown("**Goal:** Examine whether conclusions remain reasonably stable when weights change.")
         exp3 = runner.run_experiment_3()
         stab = exp3['stability_metrics']
         c1, c2, c3 = st.columns(3)
@@ -884,7 +928,8 @@ with tab_exp:
 # TAB 6: CURATED SCENARIO DATASET
 # ==============================================================================
 with tab_data:
-    st.subheader("Primary Curated Scenario Dataset (45 Auditable Scenarios)")
+    st.subheader("Curated Synthetic Evaluation Dataset (45 Auditable Scenarios)")
+    st.info("Curated Synthetic Evaluation Dataset Notice: The current evaluation dataset is synthetically generated/curated for prototype evaluation. Public deepfake datasets provide useful media-level examples but do not directly contain all five enterprise risk factors used by this framework. Synthetic rows are not original records from those public datasets.")
     st.markdown("Filter and search through all 45 curated enterprise scenarios:")
 
     col_flt1, col_flt2 = st.columns(2)
@@ -908,3 +953,35 @@ with tab_data:
         apply_scenario(selected_row_id)
         st.success(f"Loaded {selected_row_id} into Simulator!")
         st.rerun()
+
+
+# ==============================================================================
+# TAB 7: METHODOLOGY & LIMITATIONS
+# ==============================================================================
+with tab_method:
+    st.subheader("📋 Research Methodology (8-Step Framework)")
+    st.markdown("""
+    The prototype implements a systematic, reproducible 8-step pipeline to evaluate risk-adaptive Zero Trust policies for enterprise identity security:
+    
+    1. **Define Enterprise Identity-Attack Scenarios:** Formulate concrete scenario models representing benign workforce workflows, novel endpoint logins, anomalous contexts, and high-impact deepfake impersonations.
+    2. **Score Five Risk Factors from 0–4:** Quantify Identity Risk ($I$), Device Risk ($D$), Context Anomaly ($C$), Action Criticality ($A$), and Deepfake Uncertainty ($U$) using operational 0–4 rubrics.
+    3. **Apply Weighted Risk Calculation:** Calculate composite raw risk $R = w_I \cdot I + w_D \cdot D + w_C \cdot C + w_A \cdot A + w_U \cdot U$ where weights sum to 1.0.
+    4. **Normalize Risk to 0–100 Scale:** Transform raw risk into standardized 100-point index: $R_{100} = (R / 4.0) \times 100$.
+    5. **Assign Risk Level:** Classify composite risk into four policy tiers: Low ($0 \le R_{100} \le 25$), Medium ($25 < R_{100} \le 50$), High ($50 < R_{100} \le 75$), or Critical ($75 < R_{100} \le 100$).
+    6. **Map Risk Level to Adaptive Zero Trust Controls:** Select proportional verification controls (SSO, Step-up MFA, Device Health Attestation, Contextual Verification, Out-of-Band Direct Callback, Dual Approval).
+    7. **Determine Authentication-Step Burden:** Measure operational complexity from 1 (single-factor) to 5 (maximum multi-barrier verification).
+    8. **Compare Risk-Adaptive Controls with Fixed Authentication:** Empirically benchmark adaptive control decisions against static Fixed MFA baselines on friction reduction and critical interception.
+    """)
+
+    st.markdown("---")
+    st.subheader("⚠️ Research Limitations & Academic Scope")
+    st.warning("""
+    To ensure academic rigor and prevent misinterpretation, the following experimental limitations are explicitly defined:
+    
+    - **1. Evaluation Scenarios are Synthetic / Curated:** The 45 primary and 5,000 supplementary scenarios are programmatically generated and curated to stress-test policy boundaries. They do not represent live corporate network telemetry.
+    - **2. Prototype is Not a Production Deepfake Detector:** This framework does not perform raw biometric signal or deep neural network media extraction. It ingests deepfake uncertainty scores ($U$) from upstream detectors.
+    - **3. Consequence Mitigation, Not Absolute Elimination:** The framework mitigates the business consequences of identity impersonation by constraining downstream authorization; it does not claim to eliminate deepfakes.
+    - **4. Risk Weights Require Further Validation:** The proposed and AHP weights reflect domain expertise and maintain mathematical transitivity, but require further empirical calibration across organizational environments.
+    - **5. Authentication-Step Burden is an Operational Metric:** Auth-step burden is computed by counting required authentication/verification steps. No human psychological user study or cognitive fatigue trial was conducted.
+    - **6. No Real-World Attack-Prevention Benchmark:** Curated simulation results demonstrate policy logic and do not establish real-world statistical attack-prevention rates or 100% security guarantees.
+    """)

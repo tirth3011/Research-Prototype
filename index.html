@@ -497,6 +497,148 @@
     }
     .btn-action:hover { opacity: 0.9; transform: translateY(-1px); }
 
+    /* Why this score section */
+    .why-score-box {
+      margin-top: 14px;
+      background: #0f172a;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px 14px;
+    }
+    .why-score-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 8px;
+      margin-top: 8px;
+    }
+    .why-factor-cell {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 6px;
+      padding: 8px 10px;
+    }
+    .why-factor-title {
+      font-weight: 600;
+      font-size: 0.8rem;
+      color: #e2e8f0;
+      margin-bottom: 4px;
+    }
+    .why-factor-detail {
+      font-size: 0.74rem;
+      color: #94a3b8;
+      line-height: 1.4;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    @media (max-width: 480px) {
+      .why-score-grid { grid-template-columns: 1fr; }
+    }
+
+    /* End-to-end Decision Chain */
+    .decision-chain-box {
+      margin-top: 16px;
+      background: #0f172a;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px;
+    }
+    .chain-flow {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-top: 10px;
+    }
+    .chain-step {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      border-radius: 6px;
+      padding: 8px 12px;
+      font-size: 0.8rem;
+    }
+    .chain-step .chain-label {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      font-weight: 700;
+      color: var(--text-muted);
+      margin-bottom: 2px;
+      letter-spacing: 0.4px;
+    }
+    .chain-step .chain-val {
+      color: #f1f5f9;
+      font-size: 0.82rem;
+    }
+    .chain-arrow {
+      text-align: center;
+      color: var(--cyan);
+      font-size: 0.85rem;
+      line-height: 1;
+      margin: -2px 0;
+      user-select: none;
+    }
+
+    /* Methodology & Limitations List */
+    .method-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 10px;
+    }
+    .method-item {
+      display: flex;
+      gap: 12px;
+      background: #0f172a;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px 14px;
+      font-size: 0.84rem;
+    }
+    .method-num {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: rgba(56, 189, 248, 0.15);
+      color: var(--cyan);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.82rem;
+      flex-shrink: 0;
+    }
+    .limit-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    .limit-item {
+      background: #0f172a;
+      border-left: 3px solid var(--high);
+      border-top: 1px solid var(--border);
+      border-right: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      border-radius: 0 8px 8px 0;
+      padding: 10px 14px;
+      font-size: 0.83rem;
+      color: #cbd5e1;
+    }
+    .exp-card {
+      background: #0f172a;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+    .exp-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--cyan);
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
   </style>
 </head>
 <body>
@@ -594,8 +736,9 @@
       </header>
 
       <div class="banner">
-        <strong>Research Notice:</strong> Multi-signal Zero Trust architecture evaluating dynamic authentication and authorization scaling across 
+        <strong>Academic Research Simulation:</strong> Multi-signal Zero Trust architecture evaluating dynamic authentication and authorization scaling across 
         Identity (<strong>I</strong>), Device (<strong>D</strong>), Context (<strong>C</strong>), Action Criticality (<strong>A</strong>), and Deepfake Uncertainty (<strong>U</strong>).
+        Focuses on mitigating the consequences of identity impersonation in enterprise workflows through risk-adaptive controls.
       </div>
 
       <!-- 1-Click Benchmark Quick-Launchers -->
@@ -609,11 +752,12 @@
 
       <!-- Tabs Navigation -->
       <div class="tabs-nav">
-        <button class="tab-btn active" onclick="switchTab('tab-sim')">🎛️ Interactive Simulator</button>
-        <button class="tab-btn" onclick="switchTab('tab-contrast')">⚖️ Action Criticality Contrast (SCN-04 vs 05)</button>
-        <button class="tab-btn" onclick="switchTab('tab-ahp')">📐 AHP Matrix Workshop</button>
-        <button class="tab-btn" onclick="switchTab('tab-exp')">🧪 Empirical Experiments</button>
-        <button class="tab-btn" onclick="switchTab('tab-dataset')">📂 Curated Scenario Dataset</button>
+        <button class="tab-btn active" onclick="switchTab('tab-sim', this)">🎛️ Interactive Simulator</button>
+        <button class="tab-btn" onclick="switchTab('tab-contrast', this)">⚖️ Action Criticality Contrast (SCN-04 vs 05)</button>
+        <button class="tab-btn" onclick="switchTab('tab-ahp', this)">📐 AHP Matrix Workshop</button>
+        <button class="tab-btn" onclick="switchTab('tab-exp', this)">🧪 Empirical Experiments</button>
+        <button class="tab-btn" onclick="switchTab('tab-dataset', this)">📂 Curated Scenario Dataset</button>
+        <button class="tab-btn" onclick="switchTab('tab-methodology', this)">📋 Methodology & Limitations</button>
       </div>
 
       <!-- TAB 1: INTERACTIVE SIMULATOR -->
@@ -738,7 +882,30 @@
               Low composite risk (0-25). Standard corporate credentials sufficient.
             </div>
 
-            <div class="card-title" style="font-size: 0.95rem; margin-top: 10px;">Zero Trust Control Pipeline</div>
+            <!-- Why this score? Dynamic Factor Contribution Breakdown -->
+            <div class="why-score-box">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                <span style="font-size: 0.86rem; font-weight: 700; color: var(--cyan); display: flex; align-items: center; gap: 6px;">
+                  🔍 Why this score?
+                </span>
+                <span style="font-size: 0.72rem; color: var(--text-muted); font-family: 'JetBrains Mono', monospace;">
+                  R = Σ(w_i × F_i) | R₁₀₀ = (R / 4) × 100
+                </span>
+              </div>
+              <div style="font-size: 0.74rem; color: var(--text-muted); margin-bottom: 8px;">
+                Exact mathematical contribution of each signal dynamically calculated by the risk engine:
+              </div>
+              <div class="why-score-grid" id="why-score-grid">
+                <!-- Dynamically populated by recalc() -->
+              </div>
+              <div style="margin-top: 10px; padding-top: 8px; border-top: 1px dashed var(--border); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; font-size: 0.8rem; font-family: 'JetBrains Mono', monospace;">
+                <div>Raw Risk: <strong id="why-raw-risk" style="color: var(--cyan);">0.300 / 4.00</strong></div>
+                <div>Normalized Risk: <strong id="why-norm-risk" style="color: var(--cyan);">7.50 / 100</strong></div>
+                <div>Risk Level: <strong id="why-risk-level" style="color: var(--low);">LOW</strong></div>
+              </div>
+            </div>
+
+            <div class="card-title" style="font-size: 0.95rem; margin-top: 14px;">Zero Trust Control Pipeline</div>
             <div id="pipeline-container">
               <div class="pipeline-step pipe-active" id="pipe-1"><span>1. Primary Credential (SSO/Password)</span><span>✅ ACTIVE</span></div>
               <div class="pipeline-step pipe-dim" id="pipe-2"><span>2. Multi-Factor Challenge (MFA Step-up)</span><span>⚪ NOT REQUIRED</span></div>
@@ -746,8 +913,85 @@
               <div class="pipeline-step pipe-dim" id="pipe-4"><span>4. Contextual Anomaly & Manager Sign-off</span><span>⚪ NOT REQUIRED</span></div>
               <div class="pipeline-step pipe-dim" id="pipe-5"><span>5. Out-of-Band Callback & Dual Authorization</span><span>⚪ NOT REQUIRED</span></div>
             </div>
+
+            <!-- End-to-End Zero Trust Decision Chain -->
+            <div class="decision-chain-box">
+              <div style="font-size: 0.86rem; font-weight: 700; color: #f8fafc; margin-bottom: 8px; display: flex; align-items: center; justify-content: space-between;">
+                <span>🔗 End-to-End Zero Trust Decision Chain</span>
+                <span style="font-size: 0.7rem; color: var(--cyan); text-transform: uppercase;">Pipeline Verification</span>
+              </div>
+              <div class="chain-flow" id="chain-flow-steps">
+                <!-- Dynamically updated by recalc() -->
+              </div>
+              <div style="margin-top: 10px; font-size: 0.77rem; color: #fde68a; background: rgba(245, 158, 11, 0.12); border-left: 3px solid #f59e0b; padding: 8px 10px; border-radius: 4px; line-height: 1.45;">
+                <strong>Zero Trust Policy Constraint:</strong> MFA success does not automatically authorize a high-risk action. Authorization remains dependent on the overall risk assessment and required Zero Trust controls.
+              </div>
+            </div>
           </div>
         </div>
+
+        <!-- Risk Factor Scoring Guide -->
+        <details class="card" id="scoring-guide-card" style="margin-bottom: 18px;">
+          <summary class="card-title" style="cursor: pointer; user-select: none; display: flex; justify-content: space-between; align-items: center; margin-bottom: 0;">
+            <span style="display: flex; align-items: center; gap: 8px;">📖 Risk Factor Scoring Guide (0–4 Scale Rubric)</span>
+            <span style="font-size: 0.75rem; color: var(--cyan); font-weight: 600;">▼ Click to Expand / Collapse</span>
+          </summary>
+          <div style="margin-top: 14px; font-size: 0.82rem; color: var(--text-muted); line-height: 1.6;">
+            <p style="margin-bottom: 12px; color: #cbd5e1;">
+              <strong>General Operational Scale:</strong> <code>0 = Very Low / Normal</code>, <code>1 = Low</code>, <code>2 = Moderate</code>, <code>3 = High</code>, <code>4 = Very High / Critical</code>.<br>
+              <em style="color: #94a3b8;">Notice: These definitions represent the prototype's operational scoring definitions for empirical research simulation, not universally standardized industry scores.</em>
+            </p>
+            <div class="table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr><th style="min-width: 170px;">Risk Factor</th><th>0 (Very Low)</th><th>1 (Low)</th><th>2 (Moderate)</th><th>3 (High)</th><th>4 (Very High / Critical)</th></tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>Identity Risk (I)</strong><br><small style="color: var(--cyan); font-family: 'JetBrains Mono', monospace;">w_I = 0.25</small></td>
+                    <td>0: Strong verified identity evidence</td>
+                    <td>1: Minor identity concern</td>
+                    <td>2: Some identity uncertainty</td>
+                    <td>3: Significant identity concern</td>
+                    <td>4: Highly suspicious identity evidence</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Device Risk (D)</strong><br><small style="color: var(--cyan); font-family: 'JetBrains Mono', monospace;">w_D = 0.15</small></td>
+                    <td>0: Trusted managed device</td>
+                    <td>1: Known device with minor concern</td>
+                    <td>2: Partially trusted / unusual device</td>
+                    <td>3: Untrusted or anomalous device</td>
+                    <td>4: Highly suspicious / unknown device</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Context Anomaly (C)</strong><br><small style="color: var(--cyan); font-family: 'JetBrains Mono', monospace;">w_C = 0.15</small></td>
+                    <td>0: Normal context</td>
+                    <td>1: Minor deviation</td>
+                    <td>2: Moderately unusual context</td>
+                    <td>3: Strongly anomalous context</td>
+                    <td>4: Highly abnormal context</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Action Criticality (A)</strong><br><small style="color: var(--cyan); font-family: 'JetBrains Mono', monospace;">w_A = 0.30</small></td>
+                    <td>0: Public / low-impact action</td>
+                    <td>1: Routine low-impact action</td>
+                    <td>2: Moderately sensitive action</td>
+                    <td>3: Sensitive business action</td>
+                    <td>4: Highly critical action (financial transfer / privileged mod)</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Identity/Deepfake Uncertainty (U)</strong><br><small style="color: var(--cyan); font-family: 'JetBrains Mono', monospace;">w_U = 0.15</small></td>
+                    <td>0: Strong authenticity evidence</td>
+                    <td>1: Low uncertainty</td>
+                    <td>2: Moderate uncertainty</td>
+                    <td>3: High uncertainty</td>
+                    <td>4: Very high uncertainty / strong manipulation concern</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </details>
 
         <!-- Factor Breakdown Table -->
         <div class="card">
@@ -767,32 +1011,39 @@
       <div id="tab-contrast" class="tab-pane">
         <div class="card">
           <div class="card-title">Action Criticality Impact: SCN-04 vs. SCN-05</div>
-          <p style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 16px;">
-            Comparing a critical treasury wire transfer against a low-impact public information request when presented with the same deepfake CEO video.
+          <p style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 12px;">
+            Demonstrating how identical suspicious identity and device signals produce differentiated Zero Trust risk tiers and control requirements based on the requested operational action.
           </p>
+          <div style="background: rgba(56, 189, 248, 0.08); border-left: 4px solid var(--cyan); padding: 10px 14px; border-radius: 6px; font-size: 0.84rem; color: #cbd5e1; margin-bottom: 16px;">
+            <strong>Core Research Insight:</strong> The framework is action-sensitive: the same identity uncertainty can require different controls depending on the potential impact of the requested action.
+          </div>
 
           <div class="contrast-box">
             <div class="contrast-card" style="border-left: 5px solid var(--critical);">
-              <h3 style="color: #f87171; margin-bottom: 6px;">SCN-04: Emergency ₹10 Lakh Wire Transfer</h3>
-              <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 12px;">Deepfake CEO video call requesting high-value treasury wire transfer from unmanaged device.</p>
-              <p style="font-size: 0.85rem; margin-bottom: 6px;"><strong>Inputs:</strong> I=3, D=4, C=3, <span style="color: #f87171; font-weight: 700;">A=4 (Financial Transfer)</span>, U=4</p>
-              <p style="font-size: 0.85rem; margin-bottom: 6px;"><strong>Raw Risk:</strong> 3.60 / 4.0</p>
-              <p style="font-size: 1.25rem; font-weight: 800; color: #f87171; margin-bottom: 6px;">R100: 90.00 / 100 (CRITICAL)</p>
-              <p style="font-size: 0.85rem; margin-bottom: 8px;"><strong>Controls:</strong> Complexity 5 / 5 (Maximum Security Barrier)</p>
-              <p style="font-size: 0.85rem; color: #cbd5e1; background: rgba(239, 68, 68, 0.1); padding: 10px; border-radius: 6px;">
-                <strong>AuthZ Verdict:</strong> 🚨 Even if attacker passed MFA, authorization is <strong>denied</strong>. Independent out-of-band telephone callback via pre-verified directory and dual-executive custody are mandatory.
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                <h3 style="color: #f87171; font-size: 1rem;">Scenario A (SCN-04): Emergency ₹10 Lakh Wire Transfer</h3>
+                <span class="badge badge-critical" style="font-size: 0.72rem;">CRITICAL TIER</span>
+              </div>
+              <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 12px;">Suspicious/deepfake executive identity + unmanaged device requesting high-impact treasury wire transfer.</p>
+              <p style="font-size: 0.85rem; margin-bottom: 6px;"><strong>Inputs:</strong> I=3, D=4, C=3, <span style="color: #f87171; font-weight: 700;">A=4 (Major Financial Transfer)</span>, U=4</p>
+              <p style="font-size: 0.85rem; margin-bottom: 6px;"><strong>Raw Risk:</strong> 3.60 / 4.00 &nbsp;|&nbsp; <strong>Normalized Risk:</strong> 90.00 / 100</p>
+              <p style="font-size: 0.85rem; margin-bottom: 8px;"><strong>Controls:</strong> Complexity 5 / 5 (Strong/Phishing-Resistant MFA, Device Attestation, Independent OOB Callback, Dual Approval)</p>
+              <p style="font-size: 0.83rem; color: #cbd5e1; background: rgba(239, 68, 68, 0.12); padding: 10px; border-radius: 6px; line-height: 1.45;">
+                <strong>Authorization Verdict:</strong> 🚨 <strong>HOLD / DENIED.</strong> MFA success does not automatically authorize a high-risk action. Because action criticality is high ($A=4$) and identity uncertainty is severe ($U=4$), authorization is withheld until independent out-of-band telephone verification confirms identity.
               </p>
             </div>
 
             <div class="contrast-card" style="border-left: 5px solid var(--high);">
-              <h3 style="color: #fb923c; margin-bottom: 6px;">SCN-05: Public Press Release Query</h3>
-              <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 12px;">Same suspicious deepfake CEO video and unmanaged device, but requesting public press releases.</p>
-              <p style="font-size: 0.85rem; margin-bottom: 6px;"><strong>Inputs:</strong> I=3, D=4, C=3, <span style="color: var(--cyan); font-weight: 700;">A=0 (Public Information)</span>, U=4</p>
-              <p style="font-size: 0.85rem; margin-bottom: 6px;"><strong>Raw Risk:</strong> 2.40 / 4.0</p>
-              <p style="font-size: 1.25rem; font-weight: 800; color: #fb923c; margin-bottom: 6px;">R100: 60.00 / 100 (HIGH)</p>
-              <p style="font-size: 0.85rem; margin-bottom: 8px;"><strong>Controls:</strong> Complexity 3 / 5 (Reduced Friction)</p>
-              <p style="font-size: 0.85rem; color: #cbd5e1; background: rgba(249, 115, 22, 0.1); padding: 10px; border-radius: 6px;">
-                <strong>AuthZ Verdict:</strong> ✅ Because public data causes zero financial damage, expensive executive callback is avoided. Standard MFA and device health attestation suffice.
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                <h3 style="color: #fb923c; font-size: 1rem;">Scenario B (SCN-05): Public Press Release Query</h3>
+                <span class="badge badge-high" style="font-size: 0.72rem;">HIGH TIER</span>
+              </div>
+              <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 12px;">Same suspicious deepfake CEO identity and unmanaged device, but requesting public press release documents.</p>
+              <p style="font-size: 0.85rem; margin-bottom: 6px;"><strong>Inputs:</strong> I=3, D=4, C=3, <span style="color: var(--cyan); font-weight: 700;">A=0 (Public / Low-Impact Action)</span>, U=4</p>
+              <p style="font-size: 0.85rem; margin-bottom: 6px;"><strong>Raw Risk:</strong> 2.40 / 4.00 &nbsp;|&nbsp; <strong>Normalized Risk:</strong> 60.00 / 100</p>
+              <p style="font-size: 0.85rem; margin-bottom: 8px;"><strong>Controls:</strong> Complexity 3 / 5 (Step-up MFA, Device Health Attestation, Context Verification)</p>
+              <p style="font-size: 0.83rem; color: #cbd5e1; background: rgba(249, 115, 22, 0.12); padding: 10px; border-radius: 6px; line-height: 1.45;">
+                <strong>Authorization Verdict:</strong> ⚠️ <strong>LESS RESTRICTIVE RESPONSE.</strong> Because the requested action carries zero direct financial impact ($A=0$), overall risk drops from 90 to 60. Expensive executive out-of-band callbacks are avoided while still requiring device and MFA attestation.
               </p>
             </div>
           </div>
@@ -804,7 +1055,7 @@
         <div class="card">
           <div class="card-title">Analytic Hierarchy Process (AHP) Weight Workshop</div>
           <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 16px;">
-            Saaty's Analytic Hierarchy Process computes internally consistent priority weights from pairwise comparison judgments.
+            Saaty's Analytic Hierarchy Process computes internally consistent priority weights from pairwise comparison judgments. AHP-derived expert-informed weights structure multi-signal priorities based on domain expertise.
           </p>
 
           <div class="grid-2">
@@ -830,7 +1081,12 @@
             <div style="background: #0f172a; padding: 18px; border-radius: 8px; border: 1px solid var(--border);">
               <h4 style="color: var(--cyan); margin-bottom: 12px; font-size: 0.95rem;">AHP Consistency Diagnostics</h4>
               <p style="font-size: 0.85rem; margin-bottom: 6px;">Consistency Ratio (CR): <strong id="ahp-cr" style="color: #10b981; font-size: 1.1rem;">0.0000</strong> (Threshold: &le; 0.10)</p>
-              <p style="font-size: 0.8rem; color: #10b981; margin-bottom: 14px;" id="ahp-status">✅ Judgments are mathematically consistent.</p>
+              <p style="font-size: 0.8rem; color: #10b981; margin-bottom: 10px;" id="ahp-status">✅ Consistency Ratio indicates internally consistent pairwise judgments.</p>
+              
+              <div style="font-size: 0.76rem; color: #94a3b8; background: rgba(255,255,255,0.03); border: 1px solid var(--border); padding: 8px 10px; border-radius: 6px; margin-bottom: 14px; line-height: 1.45;">
+                <strong style="color: #cbd5e1;">Methodological Note:</strong> Consistency does not establish that the weights are universally correct. Sensitivity analysis is used to examine the effect of alternative weight choices.<br>
+                <strong style="color: #cbd5e1;">Meaning of CR = 0.0000:</strong> Indicates exact mathematical transitivity across the baseline expert pairwise matrix ($a_{ik} = a_{ij} \times a_{jk}$). Real-world elicited human matrices typically exhibit small variations, considered valid as long as $\text{CR} \le 0.10$.
+              </div>
 
               <h4 style="color: var(--cyan); margin-bottom: 8px; font-size: 0.95rem;">Derived Priority Weights</h4>
               <div id="ahp-weights-display" style="font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; line-height: 1.8;"></div>
@@ -844,37 +1100,102 @@
       <!-- TAB 4: EMPIRICAL EXPERIMENTS -->
       <div id="tab-exp" class="tab-pane">
         <div class="card">
-          <div class="card-title">Empirical Research Experiments (45 Curated Enterprise Scenarios)</div>
-          <div class="metrics-row">
+          <div class="card-title">
+            <span>🧪 Empirical Research Experiments (45 Curated Enterprise Scenarios)</span>
+            <span class="tag">Synthetic Evaluation</span>
+          </div>
+
+          <!-- Academic Disclaimers Banner -->
+          <div style="background: rgba(56, 189, 248, 0.08); border-left: 4px solid var(--cyan); padding: 12px 14px; border-radius: 6px; font-size: 0.82rem; color: #cbd5e1; margin-bottom: 18px; line-height: 1.5;">
+            <strong>Synthetic Scenario Evaluation Notice:</strong> These metrics reflect the current synthetic/curated evaluation set and are not a benchmark of real-world deepfake detection performance.<br>
+            <strong>Simulation Scope:</strong> Observed across the curated synthetic enterprise scenarios evaluated in this prototype. This result should not be interpreted as 100% real-world deepfake detection or prevention.
+          </div>
+
+          <!-- Summary Metric Cards -->
+          <div class="metrics-row" style="margin-bottom: 20px;">
             <div class="metric-cell">
-              <div class="metric-title">Risk-Response Correlation</div>
+              <div class="metric-title">Risk–Response Correlation</div>
               <div class="metric-score">0.9659</div>
-              <div style="font-size: 0.72rem; color: var(--text-muted);">Pearson r (p &lt; 0.001)</div>
+              <div style="font-size: 0.72rem; color: var(--text-muted);">Pearson r (p &lt; 0.001) | ρ = 0.9521</div>
             </div>
             <div class="metric-cell">
-              <div class="metric-title">Low-Risk Friction Saved</div>
+              <div class="metric-title">Auth-Step Burden Reduction</div>
               <div class="metric-score">50.0%</div>
-              <div style="font-size: 0.72rem; color: var(--text-muted);">Complexity 1 vs 2 (Fixed MFA)</div>
+              <div style="font-size: 0.72rem; color: var(--text-muted);">Complexity 1.0 vs 2.0 (Low-Risk)</div>
             </div>
             <div class="metric-cell">
-              <div class="metric-title">Critical Attacks Held</div>
+              <div class="metric-title">Critical Scenario Interception</div>
               <div class="metric-score">100.0%</div>
-              <div style="font-size: 0.72rem; color: var(--text-muted);">8 / 8 Quarantined for Out-of-Band</div>
+              <div style="font-size: 0.72rem; color: var(--text-muted);">8 / 8 Held for Out-of-Band (Simulation)</div>
             </div>
           </div>
 
-          <div class="table-responsive">
-          <table class="data-table">
-            <thead>
-              <tr><th>Metric Name</th><th>Fixed MFA (Baseline)</th><th>Risk-Adaptive ZTA</th><th>Research Benefit</th></tr>
-            </thead>
-            <tbody>
-              <tr><td>Low-Risk Scenario Authentication Complexity</td><td>2.0 Steps (Mandatory OTP)</td><td><strong>1.0 Step</strong> (Basic Auth)</td><td>50% Reduction in User Fatigue</td></tr>
-              <tr><td>Critical Attack Interception Rate</td><td>0% (Allowed if MFA Passed)</td><td><strong>100.0%</strong> (Held for Callback)</td><td>Catastrophic Transfer Prevention</td></tr>
-              <tr><td>Strong Control Coverage on High/Critical Tiers</td><td>Static (No Escalation)</td><td><strong>100.0%</strong> (Complexity &ge; 3)</td><td>Proportional Defense Escalation</td></tr>
-              <tr><td>Weight Sensitivity Concordance</td><td>N/A</td><td><strong>91.1% – 100%</strong></td><td>Robust Policy Stability</td></tr>
-            </tbody>
-          </table>
+          <!-- Experiment 1 -->
+          <div class="exp-card">
+            <div class="exp-title">
+              <span>📊 Experiment 1: Risk–Response Consistency</span>
+            </div>
+            <div style="font-size: 0.82rem; color: #94a3b8; margin-bottom: 8px;">
+              <strong>Research Question:</strong> Does increasing assessed risk result in stronger Zero Trust controls?
+            </div>
+            <p style="font-size: 0.82rem; color: #cbd5e1; margin-bottom: 10px; line-height: 1.5;">
+              Across the 45 curated enterprise scenarios, multi-signal composite risk ($R_{100}$) strongly correlates with access control complexity ($r = 0.9659, p &lt; 0.001$; Spearman $\rho = 0.9521$). Strong control coverage across High and Critical tiers is <strong>100.0% Critical Scenario Control Coverage</strong> (13 / 13 scenarios assigned Complexity &ge; 3), verifying monotonic security escalation as risk levels increase.
+            </p>
+          </div>
+
+          <!-- Experiment 2 -->
+          <div class="exp-card">
+            <div class="exp-title">
+              <span>⚖️ Experiment 2: Fixed MFA vs. Risk-Adaptive ZTA</span>
+            </div>
+            <div style="font-size: 0.82rem; color: #94a3b8; margin-bottom: 8px;">
+              <strong>Comparison:</strong> Fixed MFA for every scenario versus Risk-adaptive authentication and control selection.
+            </div>
+            <div class="table-responsive" style="margin-bottom: 10px;">
+              <table class="data-table">
+                <thead>
+                  <tr><th>Evaluation Dimension</th><th>Fixed MFA (Baseline)</th><th>Risk-Adaptive ZTA (Proposed)</th><th>Comparative Research Finding</th></tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Low-Risk Scenario Authentication Burden</td>
+                    <td>2.0 Steps (Mandatory OTP for all)</td>
+                    <td><strong>1.0 Step</strong> (Standard SSO / Credentials)</td>
+                    <td><strong>50.0% Reduction in Authentication-Step Burden</strong></td>
+                  </tr>
+                  <tr>
+                    <td>Critical Attack Interception in Curated Simulation</td>
+                    <td>0% (Permitted if primary MFA captured/bypassed)</td>
+                    <td><strong>100.0% Critical Scenario Interception</strong> (8 / 8 Quarantined)</td>
+                    <td>Withholds authorization until independent out-of-band telephone verification</td>
+                  </tr>
+                  <tr>
+                    <td>Control Coverage on High/Critical Tiers</td>
+                    <td>Static (No escalation beyond MFA)</td>
+                    <td><strong>100.0% Strong Control Coverage</strong> (Complexity &ge; 3)</td>
+                    <td>Dynamic multi-barrier attestation prevents credential replay</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div style="font-size: 0.77rem; color: #94a3b8; line-height: 1.45; font-style: italic;">
+              * Note: Authentication-step burden is measured using the number of authentication/verification steps required per scenario. No human user study was conducted. MFA success does not automatically authorize a high-risk action.
+            </div>
+          </div>
+
+          <!-- Experiment 3 -->
+          <div class="exp-card">
+            <div class="exp-title">
+              <span>📐 Experiment 3: Weight Sensitivity Analysis</span>
+            </div>
+            <div style="font-size: 0.82rem; color: #94a3b8; margin-bottom: 8px;">
+              <strong>Comparison:</strong> Proposed Weights ($[0.25, 0.15, 0.15, 0.30, 0.15]$) vs. Equal Weights ($[0.20, 0.20, 0.20, 0.20, 0.20]$) vs. AHP-Derived Weights ($[0.25, 0.15, 0.15, 0.30, 0.15]$).
+            </div>
+            <p style="font-size: 0.82rem; color: #cbd5e1; margin-bottom: 10px; line-height: 1.5;">
+              <strong>Goal:</strong> Examine whether risk tier classifications and authorization decisions remain reasonably stable when factor weights change.<br>
+              <strong>Stability Concordance Results:</strong>
+              Equal Weights vs. Proposed Weights concordance is <strong>91.1%</strong> (41 / 45 match, mean absolute score difference = 3.03 pts). AHP-derived weights achieve <strong>100.0% concordance</strong> with proposed weights. Overall three-way concordance across all 45 scenarios is <strong>91.1%</strong>, confirming that policy conclusions do not collapse under minor parameter variations.
+            </p>
           </div>
         </div>
       </div>
@@ -883,9 +1204,15 @@
       <div id="tab-dataset" class="tab-pane">
         <div class="card">
           <div class="card-title">
-            <span>Curated Scenario Dataset (45 Auditable Scenarios)</span>
+            <span>Curated Synthetic Evaluation Dataset (45 Auditable Scenarios)</span>
             <input type="text" id="filter-input" placeholder="Search scenarios..." style="max-width: 250px;" oninput="filterTable()">
           </div>
+
+          <!-- Dataset Transparency Notice -->
+          <div style="background: rgba(56, 189, 248, 0.08); border-left: 4px solid var(--cyan); padding: 12px 14px; border-radius: 6px; font-size: 0.82rem; color: #cbd5e1; margin-bottom: 16px; line-height: 1.5;">
+            <strong>Curated Synthetic Evaluation Dataset Transparency Notice:</strong> The current evaluation dataset is synthetically generated and curated for prototype evaluation. Public deepfake datasets (such as ASVspoof, Celeb-DF, and FaceForensics++) provide useful media-level examples but do not directly contain all five enterprise risk factors ($I, D, C, A, U$) used by this framework. Synthetic rows are not original records from those public biometric datasets.
+          </div>
+
           <div class="table-responsive">
             <table class="data-table" id="scenarios-table">
               <thead>
@@ -893,6 +1220,84 @@
               </thead>
               <tbody id="dataset-tbody"></tbody>
             </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 6: METHODOLOGY & LIMITATIONS -->
+      <div id="tab-methodology" class="tab-pane">
+        <div class="card">
+          <div class="card-title">
+            <span>📋 Research Methodology (8-Step Framework)</span>
+            <span class="tag">Framework Design</span>
+          </div>
+          <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 14px;">
+            The prototype implements a systematic, reproducible 8-step pipeline to evaluate risk-adaptive Zero Trust policies for enterprise identity security:
+          </p>
+
+          <div class="method-list">
+            <div class="method-item">
+              <div class="method-num">1</div>
+              <div><strong>Define Enterprise Identity-Attack Scenarios:</strong> Formulate concrete scenario models representing benign workforce workflows, novel endpoint logins, anomalous contexts, and high-impact deepfake impersonations.</div>
+            </div>
+            <div class="method-item">
+              <div class="method-num">2</div>
+              <div><strong>Score Five Risk Factors from 0–4:</strong> Quantify Identity Risk ($I$), Device Risk ($D$), Context Anomaly ($C$), Action Criticality ($A$), and Deepfake Uncertainty ($U$) using operational 0–4 rubrics.</div>
+            </div>
+            <div class="method-item">
+              <div class="method-num">3</div>
+              <div><strong>Apply Weighted Risk Calculation:</strong> Calculate composite raw risk $R = w_I \cdot I + w_D \cdot D + w_C \cdot C + w_A \cdot A + w_U \cdot U$ where weights sum to 1.0.</div>
+            </div>
+            <div class="method-item">
+              <div class="method-num">4</div>
+              <div><strong>Normalize Risk to 0–100 Scale:</strong> Transform raw risk into standardized 100-point index: $R_{100} = (R / 4.0) \times 100$.</div>
+            </div>
+            <div class="method-item">
+              <div class="method-num">5</div>
+              <div><strong>Assign Risk Level:</strong> Classify composite risk into four policy tiers: Low ($0 \le R_{100} \le 25$), Medium ($25 &lt; R_{100} \le 50$), High ($50 &lt; R_{100} \le 75$), or Critical ($75 &lt; R_{100} \le 100$).</div>
+            </div>
+            <div class="method-item">
+              <div class="method-num">6</div>
+              <div><strong>Map Risk Level to Adaptive Zero Trust Controls:</strong> Select proportional verification controls (SSO, Step-up MFA, Device Health Attestation, Contextual Verification, Out-of-Band Direct Callback, Dual Approval).</div>
+            </div>
+            <div class="method-item">
+              <div class="method-num">7</div>
+              <div><strong>Determine Authentication-Step Burden:</strong> Measure operational complexity from 1 (single-factor) to 5 (maximum multi-barrier verification).</div>
+            </div>
+            <div class="method-item">
+              <div class="method-num">8</div>
+              <div><strong>Compare Risk-Adaptive Controls with Fixed Authentication:</strong> Empirically benchmark adaptive control decisions against static Fixed MFA baselines on friction reduction and critical interception.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card" style="margin-top: 18px;">
+          <div class="card-title">
+            <span style="color: #f87171;">⚠️ Research Limitations & Academic Scope</span>
+            <span class="badge badge-high" style="font-size: 0.72rem;">Academic Boundaries</span>
+          </div>
+          <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 14px;">
+            To ensure academic rigor and prevent misinterpretation, the following experimental limitations are explicitly defined:
+          </p>
+          <div class="limit-list">
+            <div class="limit-item">
+              <strong>1. Evaluation Scenarios are Synthetic / Curated:</strong> The 45 primary and 5,000 supplementary scenarios are programmatically generated and curated to stress-test policy boundaries. They do not represent live corporate network telemetry.
+            </div>
+            <div class="limit-item">
+              <strong>2. Prototype is Not a Production Deepfake Detector:</strong> This framework does not perform raw biometric signal or deep neural network media extraction. It ingests deepfake uncertainty scores ($U$) from upstream detectors.
+            </div>
+            <div class="limit-item">
+              <strong>3. Consequence Mitigation, Not Absolute Elimination:</strong> The framework mitigates the business consequences of identity impersonation by constraining downstream authorization; it does not claim to eliminate deepfakes.
+            </div>
+            <div class="limit-item">
+              <strong>4. Risk Weights Require Further Validation:</strong> The proposed and AHP weights reflect domain expertise and maintain mathematical transitivity, but require further empirical calibration across organizational environments.
+            </div>
+            <div class="limit-item">
+              <strong>5. Authentication-Step Burden is an Operational Metric:</strong> Auth-step burden is computed by counting required authentication/verification steps. No human psychological user study or cognitive fatigue trial was conducted.
+            </div>
+            <div class="limit-item">
+              <strong>6. No Real-World Attack-Prevention Benchmark:</strong> Curated simulation results demonstrate policy logic and do not establish real-world statistical attack-prevention rates or 100% security guarantees.
+            </div>
           </div>
         </div>
       </div>
@@ -998,11 +1403,13 @@
       }
     }
 
-    function switchTab(tabId) {
+    function switchTab(tabId, btnElem) {
       document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
       document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
-      event.target.classList.add('active');
-      document.getElementById(tabId).classList.add('active');
+      const targetBtn = btnElem || (window.event && window.event.target ? window.event.target.closest('.tab-btn') : null) || document.querySelector(`[onclick*="${tabId}"]`);
+      if (targetBtn) targetBtn.classList.add('active');
+      const pane = document.getElementById(tabId);
+      if (pane) pane.classList.add('active');
     }
 
     function loadBenchmark(num) {
@@ -1075,17 +1482,14 @@
 
       // Decision & Complexity Logic
       let complexity = 1, decision = "ALLOW", rationale = "Low composite risk (0-25). Standard credentials sufficient.";
-      if (tier === "LOW") {
-        complexity = 1; decision = "ALLOW";
-        rationale = "Low composite risk (0-25). Standard credentials sufficient.";
-      } else if (tier === "MEDIUM") {
+      if (tier === "MEDIUM") {
         complexity = 2; decision = "MFA_REQUIRED";
         rationale = "Moderate risk (26-50). Step-up MFA challenge required to proceed.";
       } else if (tier === "HIGH") {
         complexity = (A >= 3.0) ? 4 : 3;
         decision = (A >= 3.0) ? "APPROVAL_REQUIRED" : "STEP_UP_REQUIRED";
         rationale = `High risk (51-75). Requires MFA, trusted-device verification, and contextual sanity check${A >= 3.0 ? ' plus dual executive approval' : ''}.`;
-      } else if (tier === "CRITICAL") {
+      } else {
         complexity = 5; decision = "INDEPENDENT_VERIFICATION";
         rationale = "Critical risk (>75). Out-of-band verification via direct corporate telephone directory and dual executive sign-off required.";
       }
@@ -1117,6 +1521,93 @@
           step.className = "pipeline-step pipe-dim";
           step.children[1].textContent = "⚪ NOT REQUIRED";
         }
+      }
+
+      // Update "Why this score?" compact dynamic section
+      const factorContribs = [
+        { label: "Identity Risk (I)", score: I, weight: activeWeights.I, contrib: activeWeights.I * I },
+        { label: "Device Risk (D)", score: D, weight: activeWeights.D, contrib: activeWeights.D * D },
+        { label: "Context Anomaly (C)", score: C, weight: activeWeights.C, contrib: activeWeights.C * C },
+        { label: "Action Criticality (A)", score: A, weight: activeWeights.A, contrib: activeWeights.A * A },
+        { label: "Identity/Deepfake Uncertainty (U)", score: U, weight: activeWeights.U, contrib: activeWeights.U * U }
+      ];
+      const whyGrid = document.getElementById('why-score-grid');
+      if (whyGrid) {
+        whyGrid.innerHTML = factorContribs.map(f => `
+          <div class="why-factor-cell">
+            <div class="why-factor-title">${f.label}</div>
+            <div class="why-factor-detail">
+              Score: <strong style="color: #f8fafc;">${f.score.toFixed(1)}</strong><br>
+              Weight: <strong>${f.weight.toFixed(2)}</strong><br>
+              Contribution: <strong style="color: var(--cyan);">${f.contrib.toFixed(2)}</strong>
+            </div>
+          </div>
+        `).join('');
+        document.getElementById('why-raw-risk').textContent = `${rawR.toFixed(2)} / 4.00`;
+        document.getElementById('why-norm-risk').textContent = `${r100.toFixed(0)} / 100 (${r100.toFixed(2)})`;
+        const whyLvl = document.getElementById('why-risk-level');
+        whyLvl.textContent = tier;
+        whyLvl.style.color = (tier === "LOW" ? "var(--low)" : (tier === "MEDIUM" ? "var(--medium)" : (tier === "HIGH" ? "var(--high)" : "var(--critical)")));
+      }
+
+      // Update End-to-End Decision Chain Flow
+      const chainFlow = document.getElementById('chain-flow-steps');
+      if (chainFlow) {
+        let reqControls = "";
+        let authVerification = "";
+        let authzDecision = "";
+
+        if (tier === "LOW") {
+          reqControls = "Normal authentication (SSO / Standard Corporate Credential)";
+          authVerification = "Primary credential verified";
+          authzDecision = "Authorized (Composite risk below baseline challenge threshold)";
+        } else if (tier === "MEDIUM") {
+          reqControls = "Step-up MFA challenge + Context verification";
+          authVerification = (mfaState === "FAIL") ? "❌ Primary MFA Challenge Failed" : "✅ Step-up MFA verification completed";
+          authzDecision = (mfaState === "FAIL") ? "⛔ DENIED (MFA challenge failed)" : "Authorized if verification succeeds";
+        } else if (tier === "HIGH") {
+          reqControls = `MFA + Trusted-device attestation + Context sanity${A >= 3.0 ? ' + Managerial sign-off' : ''}`;
+          authVerification = (mfaState === "FAIL") ? "❌ MFA Failed" : "✅ MFA verified; corporate endpoint attestation confirmed";
+          authzDecision = (mfaState === "FAIL") ? "⛔ DENIED (Authentication failure)" : "Authorized conditionally on device & context attestation";
+        } else { // CRITICAL
+          reqControls = "Strong/phishing-resistant MFA + Trusted-device attestation + Independent out-of-band verification + Dual executive approval";
+          authVerification = (mfaState === "FAIL") ? "❌ MFA Challenge Failed" : "⚠️ MFA Verified (Primary AuthN alone insufficient for high-risk action)";
+          authzDecision = (decision === "BLOCK/HOLD" || decision === "INDEPENDENT_VERIFICATION")
+            ? "🚨 HOLD / BLOCK: High-impact transfer withheld pending independent out-of-band telephone verification"
+            : "Authorized only if independent verification succeeds";
+        }
+
+        chainFlow.innerHTML = `
+          <div class="chain-step">
+            <div class="chain-label">1. Risk Assessment</div>
+            <div class="chain-val" style="font-family: 'JetBrains Mono', monospace;">Raw R = ${rawR.toFixed(2)} / 4.00 &nbsp;→&nbsp; Normalized R₁₀₀ = ${r100.toFixed(2)} / 100</div>
+          </div>
+          <div class="chain-arrow">↓</div>
+          <div class="chain-step">
+            <div class="chain-label">2. Assessed Risk Level</div>
+            <div class="chain-val"><span class="badge ${tierClass}">${tier}</span></div>
+          </div>
+          <div class="chain-arrow">↓</div>
+          <div class="chain-step">
+            <div class="chain-label">3. Required Zero Trust Controls</div>
+            <div class="chain-val">${reqControls}</div>
+          </div>
+          <div class="chain-arrow">↓</div>
+          <div class="chain-step">
+            <div class="chain-label">4. Authentication / Verification</div>
+            <div class="chain-val">${authVerification}</div>
+          </div>
+          <div class="chain-arrow">↓</div>
+          <div class="chain-step">
+            <div class="chain-label">5. Authorization Decision</div>
+            <div class="chain-val">${authzDecision}</div>
+          </div>
+          <div class="chain-arrow">↓</div>
+          <div class="chain-step" style="border-left: 3px solid ${(tier === 'CRITICAL' ? 'var(--critical)' : (tier === 'HIGH' ? 'var(--high)' : (tier === 'MEDIUM' ? 'var(--medium)' : 'var(--low)')))}">
+            <div class="chain-label">6. Final Decision</div>
+            <div class="chain-val"><span class="badge ${decBadgeClass}">${decision}</span></div>
+          </div>
+        `;
       }
 
       // Update Breakdown Table
